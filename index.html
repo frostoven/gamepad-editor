@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Gamepad Profiler</title>
+
+    <script type="application/javascript">
+      // Disable annoying messages about downloading react dev tools.
+      __REACT_DEVTOOLS_GLOBAL_HOOK__ = {
+        supportsFiber: true,
+        inject: function() {},
+        onCommitFiberRoot: function() {},
+        onCommitFiberUnmount: function() {},
+      };
+    </script>
+
+    <script type="text/javascript">
+      window.debug = {
+        _info: 'Variables and functions may be stored inside the debug ' +
+          'object from anywhere in the project. This is to make debugging ' +
+          'easier from the developer console.'
+      };
+    </script>
+    <script type="text/javascript" src="build/app.js"></script>
+
+    <!--    <link rel="stylesheet" href="node_modules/semantic-ui-css/semantic.min.css" />-->
+
+    <link rel="stylesheet" href="/css/semantic.min.css">
+    <link rel="stylesheet" href="/css/semantic.supervillain.css">
+    <link rel="stylesheet" href="/css/fonts.css">
+    <link rel="stylesheet" href="/css/app.css">
+    <link rel="stylesheet" href="/css/uiPlaceholders.css">
+    <link rel="stylesheet" href="/css/splash-animations.css">
+    <link rel="stylesheet" href="/css/checkboxes.css">
+    <link rel="stylesheet" href="/css/react.css">
+    <link rel="stylesheet" href="/css/kosm.css">
+    <link rel="stylesheet" href="/css/fade-animations.css">
+    <link rel="stylesheet" href="/css/kosm-scrollbar.css">
+
+</head>
+    <body style="background-color:#111111;">
+        <div id="reactRoot"></div>
+    </body>
+</html>

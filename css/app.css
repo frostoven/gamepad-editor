@@ -1,0 +1,124 @@
+/* Core application CSS. */
+
+:root {
+    /* Overidden by doc ready boot process. */
+    /*--cursor: loading;*/
+
+    /*https://css-tricks.com/updating-a-css-variable-with-javascript/*/
+    /*let root = document.documentElement;*/
+    /*root.style.setProperty('--mouse-x', e.clientX + "px");*/
+    /*cursor: var() 3 3, auto !important;*/
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+* {
+    font-family: Helvetica, Arial, sans-serif;
+    cursor: url(/potatoLqAssets/icons/cursor1_sharp_32.png) 3 3, auto;
+}
+
+#far-object-canvas {
+    z-index: 10;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+#near-object-canvas {
+    z-index: 11;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+#starfield-canvas {
+    z-index: 12;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 12px;
+    height: 12px;
+}
+
+/* Snackbar - a toast implementation.*/
+#snackbar {
+    visibility: hidden; /* Hidden by default. Visible on click */
+    min-width: 250px; /* Set a default minimum width */
+    margin-left: -125px; /* Divide value of min-width by 2 */
+    background-color: #333; /* Black background color */
+    color: #fff; /* White text color */
+    text-align: center; /* Centered text */
+    border-radius: 2px; /* Rounded borders */
+    padding: 16px; /* Padding */
+    position: fixed; /* Sit on top of the screen */
+    z-index: 1; /* Add a z-index if needed */
+    left: 50%; /* Center the snackbar */
+    bottom: 30px; /* 30px from the bottom */
+}
+
+/* Show the snackbar when clicking on a button (class added with JavaScript) */
+#snackbar.show {
+    visibility: visible; /* Show the snackbar */
+    /* Add animation: Take 0.5 seconds to fade in and out the snackbar.
+    However, delay the fade out process for 2.5 seconds */
+    animation: fadein 0.25s, fadeout 0.25s 1.25s;
+}
+
+#boot-log {
+    font-family: IBM_VGA_8x16, monospace;
+    font-size: 12pt;
+    font-weight: 100;
+    background-color: #000000e6;
+    position: fixed;
+    bottom: 16px;
+    left: 16px;
+    width: 322px;
+    height: 167px;
+    z-index: 1000;
+    border-radius: 2px;
+    overflow: hidden;
+    padding: 8px;
+}
+
+/* Blinks at the speed computers usually blink BIOS cursors. */
+.blinky {
+    animation: blinky 0.229651s infinite !important;
+}
+
+@keyframes blinky {
+    0%  { opacity: 0; }
+    14.286% { opacity: 0; }
+    28.571% { opacity: 1; }
+    42.857% { opacity: 1; }
+    57.143% { opacity: 1; }
+    71.429% { opacity: 1; }
+    85.715% { opacity: 0; }
+    100% { opacity: 0; }
+}
+
+
+input[type='range'] {
+    appearance: none;
+    background-color: #3a3f41;
+    height: 12px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+}
+
+input[type='range']::-webkit-slider-thumb {
+    appearance: none;
+    background: #b2daab;
+    cursor: ew-resize;
+    width: 16px;
+    height: 16px;
+    margin-top: -1px;
+    border-radius: 8px;
+}
