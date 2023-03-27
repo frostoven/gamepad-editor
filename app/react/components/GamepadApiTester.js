@@ -5,6 +5,8 @@ const GamepadTester = () => {
   const [ gamepad, setGamepad ] = useState(null);
   const [ buttons, setButtons ] = useState([]);
   const [ axes, setAxes ] = useState([]);
+  const [ buttonStates, setButtonStates ] = useState(Array(16).fill(false));
+  const connectedGamepad = navigator.getGamepads()[gamepad.index];
 
   // two event listeners to detect pad connection and disconnection.
 
@@ -34,6 +36,7 @@ const GamepadTester = () => {
   const handleGamepadConnected = (event) => {
     console.log('Gamepad connected:', event.gamepad);
     setGamepad(event.gamepad);
+    updateGamepadStatus();
   };
 
   const handleGamepadDisconnected = (event) => {
@@ -49,12 +52,22 @@ const GamepadTester = () => {
   const updateGamepadStatus = (gamepad) => {
     const newButtons = [];
     const newAxes = [];
+    const buttonStatesCopy = [ ...buttonStates ];
 
     for (let i = 0; i < gamepad.buttons.length; i++) {
       const button = gamepad.buttons[i];
       const value = typeof button === 'object' ? button.value : button;
       const pressed = value > 0.1;
+      const prevPressed = buttonStatesCopy[i];
       newButtons.push(pressed ? '1.00' : '0.00');
+      if (pressed && !prevPressed) {
+        // Button was just pressed
+        buttonStatesCopy[i] = true;
+      }
+      else if (!pressed && prevPressed) {
+        // Button was just released
+        buttonStatesCopy[i] = false;
+      }
     }
 
     for (let i = 0; i < gamepad.axes.length; i++) {
@@ -79,6 +92,7 @@ const GamepadTester = () => {
                 <div key={index}>
                   <span>{`Button ${index}:`}</span>
                   <span>{buttonValue}</span>
+                  {buttonStates[index] && <span> (Pressed)</span>}
                 </div>
               ))}
             </div>
