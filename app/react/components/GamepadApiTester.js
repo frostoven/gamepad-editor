@@ -75,8 +75,33 @@ const GamepadTester = () => {
       newAxes.push(axis.toFixed(2));
     }
 
+    for (let i = 0; i < connectedGamepad.buttons.length; i++) {
+      const button = connectedGamepad.buttons[i];
+      const value = typeof button === 'object' ? button.value : button;
+      const pressed = value > 0.1;
+      const prevPressed = buttonStatesCopy[i];
+      newButtons.push(pressed ? '1.00' : '0.00');
+      if (pressed && !prevPressed) {
+
+        // Button was just pressed
+        buttonStatesCopy[i] = true;
+      }
+      else if (!pressed && prevPressed) {
+
+        // Button was just released
+        buttonStatesCopy[i] = false;
+      }
+    }
+
+    for (let i = 0; i < connectedGamepad.axes.length; i++) {
+      const axis = connectedGamepad.axes[i];
+      newAxes.push(axis.toFixed(2));
+    }
+
     setButtons(newButtons);
     setAxes(newAxes);
+    setButtonStates(buttonStatesCopy);
+    window.requestAnimationFrame(updateGamepadStatus);
   };
 
   return (
