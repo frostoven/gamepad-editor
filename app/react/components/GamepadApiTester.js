@@ -46,9 +46,11 @@ const GamepadTester = () => {
   };
 
   // Checks if the button value is greater than 0.1.
-  const updateGamepadStatus = () => {
+  const updateGamepadStatus = (connectedGamepad) => {
+    if (!connectedGamepad) return;
+
     const gamepads = navigator.getGamepads();
-    const currentGamepad = gamepads[gamepad.index];
+    const currentGamepad = gamepads[connectedGamepad.index];
 
     const newButtons = [];
     const newAxes = [];
