@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from 'react';
 
-// initialize THANGZ.
+// initialize.
 const GamepadTester = () => {
   const [ gamepad, setGamepad ] = useState(null);
   const [ buttons, setButtons ] = useState([]);
   const [ axes, setAxes ] = useState([]);
-  const [ buttonStates, setButtonStates ] = useState(Array(16).fill(false));
-  const connectedGamepad = navigator.getGamepads()[gamepad.index];
 
   // two event listeners to detect pad connection and disconnection.
-
   useEffect(() => {
     window.addEventListener('gamepadconnected', handleGamepadConnected);
     window.addEventListener('gamepaddisconnected', handleGamepadDisconnected);
@@ -21,11 +18,15 @@ const GamepadTester = () => {
   }, []);
 
   // useEffect hook is responsible for continuously updating the status of the connected gamepad.
-
   useEffect(() => {
     if (!gamepad) return;
 
-    const animationFrameId = window.requestAnimationFrame(() => updateGamepadStatus(gamepad));
+    const updateLoop = () => {
+      updateGamepadStatus(gamepad);
+      window.requestAnimationFrame(updateLoop);
+    };
+
+    const animationFrameId = window.requestAnimationFrame(updateLoop);
 
     return () => {
       window.cancelAnimationFrame(animationFrameId);
@@ -36,7 +37,7 @@ const GamepadTester = () => {
   const handleGamepadConnected = (event) => {
     console.log('Gamepad connected:', event.gamepad);
     setGamepad(event.gamepad);
-    updateGamepadStatus();
+    updateGamepadStatus(event.gamepad);
   };
 
   const handleGamepadDisconnected = (event) => {
@@ -44,64 +45,28 @@ const GamepadTester = () => {
     setGamepad(null);
   };
 
-  // Checks if the button value is greater than 0.1 (indicating that the button is being pressed), and pushes a string value of "1.00" to newButtons if it is pressed,
-  // or "0.00" if it is not pressed.
-  // For each axis, it uses the toFixed method to round the value to two decimal places and then pushes the result to newAxes.
-  // FIXME: Detects and displays change eg: 0.00 to 1.00, but then gets stuck at 1.00 and no other buttons register.
+  // Checks if the button value is greater than 0.1.
+  const updateGamepadStatus = () => {
+    const gamepads = navigator.getGamepads();
+    const currentGamepad = gamepads[gamepad.index];
 
-  const updateGamepadStatus = (gamepad) => {
     const newButtons = [];
     const newAxes = [];
-    const buttonStatesCopy = [ ...buttonStates ];
 
-    for (let i = 0; i < gamepad.buttons.length; i++) {
-      const button = gamepad.buttons[i];
+    for (let i = 0; i < currentGamepad.buttons.length; i++) {
+      const button = currentGamepad.buttons[i];
       const value = typeof button === 'object' ? button.value : button;
       const pressed = value > 0.1;
-      const prevPressed = buttonStatesCopy[i];
       newButtons.push(pressed ? '1.00' : '0.00');
-      if (pressed && !prevPressed) {
-        // Button was just pressed
-        buttonStatesCopy[i] = true;
-      }
-      else if (!pressed && prevPressed) {
-        // Button was just released
-        buttonStatesCopy[i] = false;
-      }
     }
 
-    for (let i = 0; i < gamepad.axes.length; i++) {
-      const axis = gamepad.axes[i];
-      newAxes.push(axis.toFixed(2));
-    }
-
-    for (let i = 0; i < connectedGamepad.buttons.length; i++) {
-      const button = connectedGamepad.buttons[i];
-      const value = typeof button === 'object' ? button.value : button;
-      const pressed = value > 0.1;
-      const prevPressed = buttonStatesCopy[i];
-      newButtons.push(pressed ? '1.00' : '0.00');
-      if (pressed && !prevPressed) {
-
-        // Button was just pressed
-        buttonStatesCopy[i] = true;
-      }
-      else if (!pressed && prevPressed) {
-
-        // Button was just released
-        buttonStatesCopy[i] = false;
-      }
-    }
-
-    for (let i = 0; i < connectedGamepad.axes.length; i++) {
-      const axis = connectedGamepad.axes[i];
+    for (let i = 0; i < currentGamepad.axes.length; i++) {
+      const axis = currentGamepad.axes[i];
       newAxes.push(axis.toFixed(2));
     }
 
     setButtons(newButtons);
     setAxes(newAxes);
-    setButtonStates(buttonStatesCopy);
-    window.requestAnimationFrame(updateGamepadStatus);
   };
 
   return (
@@ -117,7 +82,6 @@ const GamepadTester = () => {
                 <div key={index}>
                   <span>{`Button ${index}:`}</span>
                   <span>{buttonValue}</span>
-                  {buttonStates[index] && <span> (Pressed)</span>}
                 </div>
               ))}
             </div>
