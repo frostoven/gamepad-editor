@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 
-// initialize.
+// Initialize.
 const GamepadTester = () => {
   const [ gamepad, setGamepad ] = useState(null);
   const [ buttons, setButtons ] = useState([]);
   const [ axes, setAxes ] = useState([]);
 
-  // two event listeners to detect pad connection and disconnection.
+  // Two event listeners to detect pad connection and disconnection.
   useEffect(() => {
     window.addEventListener('gamepadconnected', handleGamepadConnected);
     window.addEventListener('gamepaddisconnected', handleGamepadDisconnected);
