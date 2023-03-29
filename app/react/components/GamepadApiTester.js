@@ -45,6 +45,16 @@ const GamepadTester = () => {
     setGamepad(null);
   };
 
+  const isButtonStateChanged = (oldButtons, newButtons) => {
+    if (oldButtons.length !== newButtons.length) return true;
+
+    for (let i = 0; i < oldButtons.length; i++) {
+      if (oldButtons[i] !== newButtons[i]) return true;
+    }
+
+    return false;
+  };
+
   // Checks if the button value is greater than 0.1.
   const updateGamepadStatus = (connectedGamepad) => {
     if (!connectedGamepad) return;
@@ -67,8 +77,11 @@ const GamepadTester = () => {
       newAxes.push(axis.toFixed(2));
     }
 
-    setButtons(newButtons);
-    setAxes(newAxes);
+    // Check if the button state has changed
+    if (isButtonStateChanged(buttons, newButtons)) {
+      setButtons(newButtons);
+      setAxes(newAxes);
+    }
   };
 
   return (
