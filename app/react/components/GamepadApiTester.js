@@ -49,7 +49,9 @@ const GamepadTester = () => {
     if (oldButtons.length !== newButtons.length) return true;
 
     for (let i = 0; i < oldButtons.length; i++) {
-      if (oldButtons[i] !== newButtons[i]) return true;
+      const oldValue = oldButtons[i];
+      const newValue = newButtons[i];
+      if (Math.abs(oldValue - newValue) > 0.15) return true;
     }
 
     return false;
