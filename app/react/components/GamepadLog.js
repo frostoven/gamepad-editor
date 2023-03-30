@@ -1,4 +1,4 @@
-import React from 'react';
+/*import React from 'react';
 
 const LOG_STYLE = {
   position: 'fixed',
@@ -30,4 +30,4 @@ export default class GamepadLog extends React.Component {
       </div>
     );
   }
-}
+}*/
