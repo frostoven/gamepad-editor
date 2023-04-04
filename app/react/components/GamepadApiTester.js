@@ -26,7 +26,34 @@ const GamepadTester = () => {
     const updatedAxes = [...gamepad.axes];
     setAxes(updatedAxes);
 
-  // Two event listeners to detect pad connection and disconnection.
+    // Update button cache and log changes
+    updatedButtons.forEach((buttonValue, index) => {
+      if (buttonCache[index] !== buttonValue) {
+        console.log(`Button ${index} changed: ${buttonValue}`);
+        setButtonCache((prevCache) => {
+          const newCache = [...prevCache];
+          newCache[index] = buttonValue;
+          return newCache;
+        });
+      }
+    });
+
+    // Update axis cache and log changes
+    updatedAxes.forEach((axisValue, index) => {
+      if (axisCache[index] !== axisValue) {
+        console.log(`Axis ${index} changed: ${axisValue}`);
+        setAxisCache((prevCache) => {
+          const newCache = [...prevCache];
+          newCache[index] = axisValue;
+          return newCache;
+        });
+      }
+    });
+    // console.log('Button cache:', buttonCache);
+    // console.log('Button values:', updatedButtons);
+    // console.log('Gamepad:', gamepad);
+  };
+
   useEffect(() => {
     window.addEventListener('gamepadconnected', handleGamepadConnected);
     window.addEventListener('gamepaddisconnected', handleGamepadDisconnected);
