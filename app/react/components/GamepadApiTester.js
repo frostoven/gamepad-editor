@@ -64,74 +64,10 @@ const GamepadTester = () => {
     };
   }, []);
 
-  // useEffect hook is responsible for continuously updating the status of the connected gamepad.
   useEffect(() => {
-    if (!gamepad) return;
-
-    const updateLoop = () => {
-      updateGamepadStatus(gamepad);
-      window.requestAnimationFrame(updateLoop);
-    };
-
-    const animationFrameId = window.requestAnimationFrame(updateLoop);
-
-    return () => {
-      window.cancelAnimationFrame(animationFrameId);
-    };
-  }, [ gamepad ]);
-
-  // setGamepad function is called to update the gamepad state with the newly connected gamepad.
-  const handleGamepadConnected = (event) => {
-    console.log('Gamepad connected:', event.gamepad);
-    setGamepad(event.gamepad);
-    updateGamepadStatus(event.gamepad);
-  };
-
-  const handleGamepadDisconnected = (event) => {
-    console.log('Gamepad disconnected:', event.gamepad);
-    setGamepad(null);
-  };
-
-  const isButtonStateChanged = (oldButtons, newButtons) => {
-    if (oldButtons.length !== newButtons.length) return true;
-
-    for (let i = 0; i < oldButtons.length; i++) {
-      const oldValue = oldButtons[i];
-      const newValue = newButtons[i];
-      if (Math.abs(oldValue - newValue) > 0.15) return true;
-    }
-
-    return false;
-  };
-
-  // Checks if the button value is greater than 0.1.
-  const updateGamepadStatus = (connectedGamepad) => {
-    if (!connectedGamepad) return;
-
-    const gamepads = navigator.getGamepads();
-    const currentGamepad = gamepads[connectedGamepad.index];
-
-    const newButtons = [];
-    const newAxes = [];
-
-    for (let i = 0; i < currentGamepad.buttons.length; i++) {
-      const button = currentGamepad.buttons[i];
-      const value = typeof button === 'object' ? button.value : button;
-      const pressed = value > 0.1;
-      newButtons.push(pressed ? '1.00' : '0.00');
-    }
-
-    for (let i = 0; i < currentGamepad.axes.length; i++) {
-      const axis = currentGamepad.axes[i];
-      newAxes.push(axis.toFixed(2));
-    }
-
-    // Check if the button state has changed
-    if (isButtonStateChanged(buttons, newButtons)) {
-      setButtons(newButtons);
-      setAxes(newAxes);
-    }
-  };
+    const intervalId = setInterval(updateController, 16); // 60 fps
+    return () => clearInterval(intervalId);
+  }, [gamepad, buttonCache, axisCache]);
 
   return (
     <div className="gamepad-tester">
@@ -154,7 +90,7 @@ const GamepadTester = () => {
               {axes.map((axisValue, index) => (
                 <div key={index}>
                   <span>{`Axis ${index}:`}</span>
-                  <span>{axisValue}</span>
+                  <span>{axisValue.toFixed(2)}</span>
                 </div>
               ))}
             </div>
