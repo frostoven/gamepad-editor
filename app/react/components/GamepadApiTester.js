@@ -1,10 +1,30 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 
-// Initialize.
 const GamepadTester = () => {
-  const [ gamepad, setGamepad ] = useState(null);
-  const [ buttons, setButtons ] = useState([]);
-  const [ axes, setAxes ] = useState([]);
+  const [gamepad, setGamepad] = useState(null);
+  const [buttons, setButtons] = useState([]);
+  const [axes, setAxes] = useState([]);
+  const [buttonCache, setButtonCache] = useState(Array(32).fill(0));
+  const [axisCache, setAxisCache] = useState(Array(4).fill(0));
+
+  const handleGamepadConnected = (event) => {
+    console.log('Controller Connected');
+    setGamepad(event.gamepad);
+  };
+
+  const handleGamepadDisconnected = () => {
+    console.log('Controller Disconnected');
+    setGamepad(null);
+  };
+
+  const updateController = () => {
+    const gamepad = navigator.getGamepads()[0]; // The handleGamepadConnected function may not have been completed by the time the updateController function is called.
+    if (!gamepad) return;
+    const updatedButtons = [...gamepad.buttons].map((button) => button.value);
+    setButtons(updatedButtons);
+
+    const updatedAxes = [...gamepad.axes];
+    setAxes(updatedAxes);
 
   // Two event listeners to detect pad connection and disconnection.
   useEffect(() => {
