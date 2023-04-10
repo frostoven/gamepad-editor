@@ -1,0 +1,16 @@
+.button-wrapper {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.button-fill-bar {
+    height: 5px;
+    background-color: #ccc;
+    margin-left: 10px;
+    transition: width 0.1s ease-in-out;
+}
+
+.button-pressed .button-fill-bar {
+    background-color: #0f0;
+}
