@@ -78,12 +78,19 @@ const GamepadTester = () => {
           <div className="gamepad-info">
             <div className="gamepad-buttons">
               <h3>Buttons</h3>
-              {buttons.map((buttonValue, index) => (
-                <div key={index}>
-                  <span>{`Button ${index}:`}</span>
-                  <span>{buttonValue}</span>
-                </div>
-              ))}
+              {buttons.map((buttonValue, index) => {
+                // Calculate the button fill percentage based on its value
+                const fillPercentage = buttonValue * 100;
+                // Set a class name to animate the button fill bar when it's pressed
+                const buttonClass = buttonValue ? "button-pressed" : "";
+                // Render the button element with the fill bar
+                return (
+                  <div key={index} className="button-wrapper">
+                    <span>{`Button ${index}:`}</span>
+                    <div className={`button-fill-bar ${buttonClass}`} style={{width: `${fillPercentage}%`}}></div>
+                  </div>
+                );
+              })}
             </div>
             <div className="gamepad-axes">
               <h3>Axes</h3>
@@ -102,5 +109,39 @@ const GamepadTester = () => {
     </div>
   );
 };
+
+/*return (
+  <div className="gamepad-tester">
+    <h1>Gamepad Tester</h1>
+    {gamepad ? (
+      <div>
+        <h2>Connected</h2>
+        <div className="gamepad-info">
+          <div className="gamepad-buttons">
+            <h3>Buttons</h3>
+            {buttons.map((buttonValue, index) => (
+              <div key={index}>
+                <span>{`Button ${index}:`}</span>
+                <span>{buttonValue}</span>
+              </div>
+            ))}
+          </div>
+          <div className="gamepad-axes">
+            <h3>Axes</h3>
+            {axes.map((axisValue, index) => (
+              <div key={index}>
+                <span>{`Axis ${index}:`}</span>
+                <span>{axisValue.toFixed(2)}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    ) : (
+      <h2>No gamepad detected</h2>
+    )}
+  </div>
+);
+};*/
 
 export default GamepadTester;
