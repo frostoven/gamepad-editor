@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import { Loader, Segment } from 'semantic-ui-react'
 
 const GamepadTester = () => {
   const [gamepad, setGamepad] = useState(null);
@@ -104,7 +105,10 @@ const GamepadTester = () => {
           </div>
         </div>
       ) : (
-        <h2>No gamepad detected</h2>
+        <Segment>
+          <Loader active />
+          <h2>No gamepad detected</h2>
+        </Segment>
       )}
     </div>
   );
