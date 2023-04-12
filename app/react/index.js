@@ -3,6 +3,7 @@ import React from 'react';
 import GamepadManager from '../GamepadManager';
 import GamepadApiTester from './components/GamepadApiTester';
 import MenuBar from './components/MenuBar';
+import GamepadTabs from "./components/GamepadTabs";
 
 export default class RootNode extends React.Component {
   constructor(props) {
@@ -19,6 +20,7 @@ export default class RootNode extends React.Component {
   render() {
     return (
       <div>
+        <GamepadTabs />
         <MenuBar />
         <GamepadApiTester />
       </div>
