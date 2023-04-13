@@ -18,8 +18,8 @@ const GamepadTester = () => {
     setGamepad(null);
   };
 
-  const updateController = () => {
-    const gamepad = navigator.getGamepads()[0]; // The handleGamepadConnected function may not have been completed by the time the updateController function is called.
+  const updateController = (gamepadIndex) => {
+    const gamepad = navigator.getGamepads()[gamepadIndex];
     if (!gamepad) return;
     const updatedButtons = [...gamepad.buttons].map((button) => button.value);
     setButtons(updatedButtons);
@@ -29,11 +29,11 @@ const GamepadTester = () => {
 
     // Update button cache and log changes
     updatedButtons.forEach((buttonValue, index) => {
-      if (buttonCache[index] !== buttonValue) {
+      if (buttonCache[gamepadIndex][index] !== buttonValue) {
         console.log(`Button ${index} changed: ${buttonValue}`);
         setButtonCache((prevCache) => {
           const newCache = [...prevCache];
-          newCache[index] = buttonValue;
+          newCache[gamepadIndex][index] = buttonValue;
           return newCache;
         });
       }
@@ -41,18 +41,22 @@ const GamepadTester = () => {
 
     // Update axis cache and log changes
     updatedAxes.forEach((axisValue, index) => {
-      if (axisCache[index] !== axisValue) {
+      if (axisCache[gamepadIndex][index] !== axisValue) {
         console.log(`Axis ${index} changed: ${axisValue}`);
         setAxisCache((prevCache) => {
           const newCache = [...prevCache];
-          newCache[index] = axisValue;
+          newCache[gamepadIndex][index] = axisValue;
           return newCache;
         });
       }
     });
-    // console.log('Button cache:', buttonCache);
-    // console.log('Button values:', updatedButtons);
-    // console.log('Gamepad:', gamepad);
+  };
+
+  const handleItemClick = (event, { name }) => {
+    setActiveItem(name);
+    const gamepadIndex = parseInt(name.match(/\d/)) - 1;
+    setActiveGamepad(gamepadIndex);
+    updateController(gamepadIndex);
   };
 
   useEffect(() => {
