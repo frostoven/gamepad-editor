@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import {Menu} from 'semantic-ui-react'
+import GamepadApiTester from "./GamepadApiTester";
 
 export default class GamepadTabs extends Component {
   state = {
@@ -42,6 +43,12 @@ export default class GamepadTabs extends Component {
   render() {
     const {activeItem, gamepads} = this.state
 
+    let activeComponent;
+    if (activeItem) {
+      activeComponent = activeItem ? <GamepadApiTester gamepadIndex={gamepads.findIndex(gp => gp && gp.id === activeItem.split(': ')[1])} /> : null;
+    }
+
+
     // @ts-ignore
     const menuItems: React.ReactNode[] = gamepads.map((gamepad, index) => {
       const name = gamepad ? `Controller ${index + 1}: ${gamepad.id}` : `Controller ${index + 1}`
@@ -56,9 +63,12 @@ export default class GamepadTabs extends Component {
     })
 
     return (
-      <Menu>
-        {menuItems}
-      </Menu>
+      <div>
+        <Menu>
+          {menuItems}
+        </Menu>
+        {activeComponent}
+      </div>
     )
   }
 }
