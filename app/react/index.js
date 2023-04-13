@@ -1,7 +1,6 @@
 import React from 'react';
 /*import GamepadLog from './components/GamepadLog';*/
 import GamepadManager from '../GamepadManager';
-import GamepadApiTester from './components/GamepadApiTester';
 import MenuBar from './components/MenuBar';
 import GamepadTabs from "./components/GamepadTabs";
 
@@ -22,7 +21,6 @@ export default class RootNode extends React.Component {
       <div>
         <GamepadTabs />
         <MenuBar />
-        <GamepadApiTester />
       </div>
     );
   }
