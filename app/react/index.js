@@ -2,7 +2,7 @@ import React from 'react';
 /*import GamepadLog from './components/GamepadLog';*/
 import GamepadManager from '../GamepadManager';
 import MenuBar from './components/MenuBar';
-import GamepadTabs from "./components/GamepadTabs";
+import GamepadTester from "./components/GamepadTester";
 
 export default class RootNode extends React.Component {
   constructor(props) {
@@ -19,7 +19,7 @@ export default class RootNode extends React.Component {
   render() {
     return (
       <div>
-        <GamepadTabs />
+        <GamepadTester />
         <MenuBar />
       </div>
     );
