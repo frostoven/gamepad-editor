@@ -80,33 +80,106 @@ const ControllerInfo = ({gamepad}) => {
   // displays message if no gamepad is connected
   if (!gamepad) {
     return <Segment basic>
-      <Loader active />
+      <Loader active/>
       <p>No controller connected</p>
     </Segment>;
   }
 
-  // displays information about buttons and axes
+  // displays information about buttons, axis and other misc
   return (
-    <>
-      <h3>Index</h3>
-      <p>{gamepad.index}</p>
-      <h3>Connected</h3>
-      <p>{gamepad.connected ? 'Yes' : 'No'}</p>
-      <h3>Timestamp</h3>
-      <p>{gamepad.timestamp.toFixed(5)}</p>
-      <h3>Buttons</h3>
-      <ul>
-        {buttons.map((button, index) => (
-          <li key={index}>Button {index}: {button.pressed ? 'Pressed' : 'Released'}</li>
-        ))}
-      </ul>
-      <h3>Axes</h3>
-      <ul>
-        {axes.map((axis, index) => (
-          <li key={index}>Axis {index}: {axis.toFixed(2)}</li>
-        ))}
-      </ul>
-    </>
+    <Grid stackable>
+      <Grid.Row>
+        <Grid.Column>
+          <List horizontal>
+            <List.Item>
+              <Segment>
+                <h3>Index</h3>
+                <p>{gamepad.index}</p>
+              </Segment>
+            </List.Item>
+            <List.Item>
+              <Segment>
+                <h3>Connected</h3>
+                <p>{gamepad.connected ? 'Yes' : 'No'}</p>
+              </Segment>
+            </List.Item>
+            <List.Item>
+              <Segment>
+                <h3>Timestamp</h3>
+                <p>{gamepad.timestamp.toFixed(5)}</p>
+              </Segment>
+            </List.Item>
+          </List>
+        </Grid.Column>
+      </Grid.Row>
+      <Grid.Row>
+        <Grid.Column>
+          <h3>Buttons</h3>
+          <List horizontal>
+            {buttons.map((button, index) => (
+              <List.Item key={index}>
+                <Segment className="button-container">
+                  Button {index}: {button.value.toFixed(2)}
+                  <div
+                    className="bar"
+                    style={{height: `${button.value * 100}%`}}
+                  ></div>
+                </Segment>
+              </List.Item>
+            ))}
+          </List>
+        </Grid.Column>
+      </Grid.Row>
+      <Grid.Row>
+        <Grid.Column>
+          <h3>Axes</h3>
+          <List horizontal>
+            {axes.map((axis, index) => (
+              <List.Item key={index}>
+                <Segment className="axis-container">
+                  Axis {index}: {axis.toFixed(2)}
+                  <div
+                    className="positive-axis-bar"
+                    style={{
+                      height: axis >= 0 ? `${axis * 50}%` : '0%'
+                    }}
+                  ></div>
+                  <div
+                    className="negative-axis-bar"
+                    style={{
+                      height: axis < 0 ? `${Math.abs(axis) * 50}%` : '0%'
+                    }}
+                  ></div>
+                </Segment>
+              </List.Item>
+            ))}
+          </List>
+        </Grid.Column>
+      </Grid.Row>
+      <Grid.Row>
+        <Grid.Column width={8}>
+          <Checkbox
+            toggle
+            label="Enable Deadzone"
+            checked={deadzoneEnabled}
+            onChange={handleDeadzoneToggle}
+          />
+        </Grid.Column>
+        <Grid.Column width={8}>
+          <label>
+            Deadzone Value:
+            <input
+              type="number"
+              min="0"
+              max="1"
+              step="0.01"
+              value={deadzoneValue}
+              onChange={handleDeadzoneValueChange}
+            />
+          </label>
+        </Grid.Column>
+      </Grid.Row>
+    </Grid>
   );
 };
 
