@@ -50,6 +50,19 @@ const GamepadTester = () => {
 const ControllerInfo = ({gamepad}) => {
   const [buttons, setButtons] = useState([]);
   const [axes, setAxes] = useState([]);
+  const [deadzoneEnabled, setDeadzoneEnabled] = useState(false);
+  const [deadzoneValue, setDeadzoneValue] = useState(0.15);
+
+  const handleDeadzoneToggle = () => {
+    setDeadzoneEnabled(!deadzoneEnabled);
+  };
+
+  const handleDeadzoneValueChange = (event) => {
+    const newValue = parseFloat(event.target.value);
+    if (newValue >= 0 && newValue <= 1) {
+      setDeadzoneValue(newValue);
+    }
+  };
 
   // useEffect hook used to update the buttons and axes state variables
   useEffect(() => {
@@ -57,8 +70,12 @@ const ControllerInfo = ({gamepad}) => {
     if (!gamepad) return;
 
     setButtons([...gamepad.buttons]);
-    setAxes([...gamepad.axes]);
-  }, [gamepad]);
+    setAxes(
+      gamepad.axes.map((axis) =>
+        deadzoneEnabled && Math.abs(axis) < deadzoneValue ? 0 : axis
+      )
+    );
+  }, [gamepad, deadzoneEnabled, deadzoneValue]);
 
   // displays message if no gamepad is connected
   if (!gamepad) {
