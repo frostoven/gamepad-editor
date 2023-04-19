@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Tab, Loader, Segment} from 'semantic-ui-react';
+import {Tab, Loader, Segment, Grid, List, Checkbox} from 'semantic-ui-react';
 
 const GamepadTester = () => {
   const [gamepads, setGamepads] = useState(Array(4).fill(null));

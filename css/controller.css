@@ -1,16 +1,44 @@
-.button-wrapper {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
+.button-container {
+    position: relative;
 }
 
-.button-fill-bar {
-    height: 5px;
-    background-color: #ccc;
-    margin-left: 10px;
-    transition: width 0.1s ease-in-out;
+.bar {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 5px;
+    background-color: #2185d0;
+    transition: height 0.1s linear;
 }
 
-.button-pressed .button-fill-bar {
-    background-color: #0f0;
+.axis-container {
+    position: relative;
+}
+
+.positive-axis-bar,
+.negative-axis-bar {
+    position: absolute;
+    left: 0;
+    width: 5px;
+    background-color: #2185d0;
+    transition: height 0.1s linear;
+}
+
+.positive-axis-bar {
+    bottom: 50%;
+}
+
+.negative-axis-bar {
+    top: 50%;
+}
+
+/* Deadzone switch color customize */
+.ui.toggle.checkbox input:checked ~ .box:before,
+.ui.toggle.checkbox input:checked ~ label:before {
+    background-color: orange;
+}
+
+.ui.toggle.checkbox .box:before,
+.ui.toggle.checkbox label:before {
+    background-color: grey;
 }
