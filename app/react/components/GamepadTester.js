@@ -43,7 +43,16 @@ const GamepadTester = () => {
   });
 
   // displays the array of Tab panes
-  return <Tab panes={panes}/>;
+  const connectedControllers = gamepads.filter(gamepad => gamepad).length;
+
+  return (
+    <div className="app-container">
+      <div className="main-content">
+        <Tab panes={panes} />
+      </div>
+      <Segment className="status-bar">Connected controllers: {connectedControllers}</Segment>
+    </div>
+  );
 };
 
 // displays information about a specific gamepad
@@ -79,10 +88,12 @@ const ControllerInfo = ({gamepad}) => {
 
   // displays message if no gamepad is connected
   if (!gamepad) {
-    return <Segment basic>
-      <Loader active/>
-      <p>No controller connected</p>
-    </Segment>;
+    return (
+      <Segment basic>
+        <Loader active/>
+        <p>No controller connected</p>
+      </Segment>
+    );
   }
 
   // displays information about buttons, axis and other misc
