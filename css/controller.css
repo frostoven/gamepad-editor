@@ -1,0 +1,44 @@
+.button-container {
+    position: relative;
+}
+
+.bar {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 5px;
+    background-color: #2185d0;
+    transition: height 0.1s linear;
+}
+
+.axis-container {
+    position: relative;
+}
+
+.positive-axis-bar,
+.negative-axis-bar {
+    position: absolute;
+    left: 0;
+    width: 5px;
+    background-color: #2185d0;
+    transition: height 0.1s linear;
+}
+
+.positive-axis-bar {
+    bottom: 50%;
+}
+
+.negative-axis-bar {
+    top: 50%;
+}
+
+/* Deadzone switch color customize */
+.ui.toggle.checkbox input:checked ~ .box:before,
+.ui.toggle.checkbox input:checked ~ label:before {
+    background-color: orange;
+}
+
+.ui.toggle.checkbox .box:before,
+.ui.toggle.checkbox label:before {
+    background-color: grey;
+}
