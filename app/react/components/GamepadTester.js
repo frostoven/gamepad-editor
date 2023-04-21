@@ -3,6 +3,8 @@ import {Tab, Loader, Segment, Grid, List, Checkbox} from 'semantic-ui-react';
 
 const GamepadTester = () => {
   const [gamepads, setGamepads] = useState(Array(4).fill(null));
+  const [logMessages, setLogMessages] = useState(['Press a button or move an analog stick to connect the controller.']);
+  const [anyControllerConnected, setAnyControllerConnected] = useState(false);
 
   // useEffect hook used to update the gamepads state variable
   // with current connected gamepads
@@ -11,7 +13,28 @@ const GamepadTester = () => {
     // with current connected gamepads
     const updateGamepads = () => {
       const newGamepads = navigator.getGamepads();
-      setGamepads([...newGamepads]);
+      const newGamepadsArray = [...newGamepads];
+      let isConnected = false;
+
+      newGamepadsArray.forEach((gamepad, index) => {
+        if (gamepad && gamepad.connected) {
+          isConnected = true;
+          if (!gamepads[index]) {
+            setLogMessages((prevLog) => [
+              ...prevLog,
+              `Controller ${gamepad.id} connected in slot ${gamepad.index}.`,
+            ]);
+          }
+        } else if (gamepads[index] && !gamepad) {
+          setLogMessages((prevLog) => [
+            ...prevLog,
+            `Controller ${gamepads[index].id} disconnected from slot ${gamepads[index].index}.`,
+          ]);
+        }
+      });
+
+      setAnyControllerConnected(isConnected);
+      setGamepads(newGamepadsArray);
     };
 
     // interval that updates the gamepads state variable every 100ms
@@ -27,7 +50,7 @@ const GamepadTester = () => {
       window.removeEventListener('gamepadconnected', updateGamepads);
       window.removeEventListener('gamepaddisconnected', updateGamepads);
     };
-  }, []);
+  }, [gamepads]);
 
   // creates an array of Tab panes for each connected gamepad
   const panes = gamepads.map((gamepad, index) => {
@@ -42,13 +65,29 @@ const GamepadTester = () => {
     };
   });
 
+// displays log
+  const Log = ({ messages }) => {
+    return (
+      <Segment className="log-container">
+        {anyControllerConnected ? (
+          messages
+            .filter((message, index) => index !== 0)
+            .map((message, index) => <p key={index}>{message}</p>)
+        ) : (
+          <p>{messages[0]}</p>
+        )}
+      </Segment>
+    );
+  };
+
   // displays the array of Tab panes
   const connectedControllers = gamepads.filter(gamepad => gamepad).length;
 
   return (
     <div className="app-container">
       <div className="main-content">
-        <Tab panes={panes} />
+        <Tab panes={panes}/>
+        <Log messages={logMessages}/>
       </div>
       <Segment className="status-bar">Connected controllers: {connectedControllers}</Segment>
     </div>
