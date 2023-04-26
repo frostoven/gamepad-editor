@@ -222,13 +222,13 @@ const ControllerInfo = ({ gamepad }) => {
                 <Segment className="axis-container">
                   Axis {index}: {axis.toFixed(2)}
                   <div
-                    className="positive-axis-bar"
+                    className="negative-axis-bar"
                     style={{
                       height: axis >= 0 ? `${axis * 50}%` : '0%'
                     }}
                   ></div>
                   <div
-                    className="negative-axis-bar"
+                    className="positive-axis-bar"
                     style={{
                       height: axis < 0 ? `${Math.abs(axis) * 50}%` : '0%'
                     }}
