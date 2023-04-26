@@ -8,7 +8,7 @@
     bottom: 0;
     width: 5px;
     background-color: #2185d0;
-    transition: height 0.1s linear;
+    transition: height /*0.1s*/ linear;
 }
 
 .axis-container {
@@ -21,7 +21,7 @@
     left: 0;
     width: 5px;
     background-color: #2185d0;
-    transition: height 0.1s linear;
+    transition: height /*0.1s*/ linear;
 }
 
 .positive-axis-bar {
