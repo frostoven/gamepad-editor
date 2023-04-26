@@ -1,10 +1,15 @@
 import React, {useState, useEffect} from 'react';
-import {Tab, Loader, Segment, Grid, List, Checkbox, Popup, Input} from 'semantic-ui-react';
+import {Tab, Segment, Grid, List, Checkbox, Popup, Input} from 'semantic-ui-react';
 
 const GamepadTester = () => {
   const [gamepads, setGamepads] = useState(Array(4).fill(null));
   const [logMessages, setLogMessages] = useState(['Press a button or move an analog stick to connect the controller.']);
   const [anyControllerConnected, setAnyControllerConnected] = useState(false);
+  const [hasConnectedOnce, setHasConnectedOnce] = useState(false);
+
+  const addToLog = (message) => {
+    setLogMessages((prevLogMessages) => [...prevLogMessages, message]);
+  };
 
   // useEffect hook used to update the gamepads state variable
   // with current connected gamepads
@@ -24,6 +29,7 @@ const GamepadTester = () => {
               ...prevLog,
               `Controller ${gamepad.id} connected in slot ${gamepad.index}.`,
             ]);
+            setHasConnectedOnce(true);
           }
         } else if (gamepads[index] && !gamepad) {
           setLogMessages((prevLog) => [
@@ -59,35 +65,27 @@ const GamepadTester = () => {
       menuItem: tabName,
       render: () => (
         <Tab.Pane>
-          <ControllerInfo gamepad={gamepad}/>
+          <ControllerInfo gamepad={gamepad} addToLog={addToLog} logMessages={logMessages}/>
         </Tab.Pane>
       ),
     };
   });
 
-// displays log
-  const Log = ({ messages }) => {
-    return (
-      <Segment className="log-container">
-        {anyControllerConnected ? (
-          messages
-            .filter((message, index) => index !== 0)
-            .map((message, index) => <p key={index}>{message}</p>)
-        ) : (
-          <p>{messages[0]}</p>
-        )}
-      </Segment>
-    );
-  };
-
   // displays the array of Tab panes
   const connectedControllers = gamepads.filter(gamepad => gamepad).length;
-
+  // moved log into return
   return (
     <div className="app-container">
       <div className="main-content">
         <Tab panes={panes}/>
-        <Log messages={logMessages}/>
+        <Segment basic className="log-container">
+          {logMessages.map((message, index) => {
+            if (index === 0 && (anyControllerConnected || hasConnectedOnce)) {
+              return null;
+            }
+            return <p key={index}>{message}</p>;
+          })}
+        </Segment>
       </div>
       <Segment className="status-bar">Connected controllers: {connectedControllers}</Segment>
     </div>
