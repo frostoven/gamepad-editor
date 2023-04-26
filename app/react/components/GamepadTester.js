@@ -140,7 +140,6 @@ const ControllerInfo = ({ gamepad }) => {
   if (!gamepad) {
     return (
       <Segment basic>
-        <Loader active />
         <p>No controller connected</p>
       </Segment>
     );
