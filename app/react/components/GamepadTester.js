@@ -58,14 +58,19 @@ const GamepadTester = () => {
     };
   }, [gamepads]);
 
+  // adds 48 char truncation
+  const truncateText = (text, maxLength) => {
+    return text.length > maxLength ? text.slice(0, maxLength) + '…' : text;
+  };
+
   // creates an array of Tab panes for each connected gamepad
   const panes = gamepads.map((gamepad, index) => {
-    const tabName = gamepad ? gamepad.id : `Controller ${index + 1}`;
+    const tabName = gamepad ? truncateText(gamepad.id, 48) : `Controller ${index + 1}`;
     return {
       menuItem: tabName,
       render: () => (
         <Tab.Pane>
-          <ControllerInfo gamepad={gamepad} addToLog={addToLog} logMessages={logMessages}/>
+          <ControllerInfo gamepad={gamepad} addToLog={addToLog} logMessages={logMessages} />
         </Tab.Pane>
       ),
     };
