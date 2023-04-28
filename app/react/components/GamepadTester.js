@@ -105,6 +105,8 @@ const GamepadTester = () => {
           })}
         </Segment>
       </div>
+
+      <div className="status-bar-spacer"/>
       <Segment className="status-bar">Connected controllers: {connectedControllers}</Segment>
     </div>
   );
