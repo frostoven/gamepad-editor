@@ -96,15 +96,16 @@ const GamepadTester = () => {
           ))}
         </Menu>
         {renderActiveController()}
-        <Segment basic className="log-container">
-          {logMessages.map((message, index) => {
-            if (index === 0 && (anyControllerConnected || hasConnectedOnce)) {
-              return null;
-            }
-            return <p key={index}>{message}</p>;
-          })}
-        </Segment>
       </div>
+
+      <Segment basic className="log-container">
+        {logMessages.map((message, index) => {
+          if (index === 0 && (anyControllerConnected || hasConnectedOnce)) {
+            return null;
+          }
+          return <p key={index}>{message}</p>;
+        })}
+      </Segment>
 
       <div className="status-bar-spacer"/>
       <Segment className="status-bar">Connected controllers: {connectedControllers}</Segment>
