@@ -89,7 +89,7 @@ const GamepadTester = () => {
   return (
     <div className="app-container">
       <div className="main-content">
-        <Menu stackable pointing>
+        <Menu stackable>
           {panes.map((pane, index) => (
             <Menu.Item
               key={index}
