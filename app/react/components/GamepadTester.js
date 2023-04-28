@@ -1,11 +1,12 @@
 import React, {useState, useEffect} from 'react';
-import {Tab, Segment, Grid, List, Checkbox, Popup, Input} from 'semantic-ui-react';
+import {Menu, Segment, Grid, List, Checkbox, Popup, Input} from 'semantic-ui-react';
 
 const GamepadTester = () => {
   const [gamepads, setGamepads] = useState(Array(4).fill(null));
   const [logMessages, setLogMessages] = useState(['Press a button or move an analog stick to connect the controller.']);
   const [anyControllerConnected, setAnyControllerConnected] = useState(false);
   const [hasConnectedOnce, setHasConnectedOnce] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const addToLog = (message) => {
     setLogMessages((prevLogMessages) => [...prevLogMessages, message]);
@@ -63,26 +64,38 @@ const GamepadTester = () => {
     return text.length > maxLength ? text.slice(0, maxLength) + '…' : text;
   };
 
-  // creates an array of Tab panes for each connected gamepad
+  // creates an array of Menu items for each connected gamepad
   const panes = gamepads.map((gamepad, index) => {
-    const tabName = gamepad ? truncateText(gamepad.id, 48) : `Controller ${index + 1}`;
+    const fullTabName = gamepad ? gamepad.id : `Controller ${index + 1}`;
+    const truncatedTabName = truncateText(fullTabName, 48);
     return {
-      menuItem: tabName,
+      fullTabName: fullTabName,
+      truncatedTabName: truncatedTabName,
       render: () => (
-        <Tab.Pane>
-          <ControllerInfo gamepad={gamepad} addToLog={addToLog} logMessages={logMessages} />
-        </Tab.Pane>
+        <ControllerInfo gamepad={gamepad} addToLog={addToLog} logMessages={logMessages}/>
       ),
     };
   });
 
-  // displays the array of Tab panes
+  // displays the array of Menu items
   const connectedControllers = gamepads.filter(gamepad => gamepad).length;
+
+  const renderActiveController = () => {
+    const gamepad = gamepads[activeIndex];
+    return <ControllerInfo gamepad={gamepad} addToLog={addToLog} logMessages={logMessages}/>;
+  };
+
   // moved log into return
   return (
     <div className="app-container">
       <div className="main-content">
-        <Tab panes={panes}/>
+        <Menu stackable pointing>
+          {panes.map((pane, index) => (
+            <Menu.Item key={index} active={activeIndex === index}
+                       onClick={() => setActiveIndex(index)}>{pane.truncatedTabName}</Menu.Item>
+          ))}
+        </Menu>
+        {renderActiveController()}
         <Segment basic className="log-container">
           {logMessages.map((message, index) => {
             if (index === 0 && (anyControllerConnected || hasConnectedOnce)) {
@@ -98,7 +111,7 @@ const GamepadTester = () => {
 };
 
 // displays information about a specific gamepad
-const ControllerInfo = ({ gamepad }) => {
+const ControllerInfo = ({gamepad}) => {
   const [buttons, setButtons] = useState([]);
   const [axes, setAxes] = useState([]);
   const [deadzoneEnabled, setDeadzoneEnabled] = useState(false);
