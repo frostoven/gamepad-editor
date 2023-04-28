@@ -16,6 +16,9 @@ console.log(
   '\n\n'
 );
 
+// Prevent user from making the window too small:
+nw.Window.get().setMinimumSize(320, 300);
+
 onDocumentReady(() => {
   window.rootNode = ReactDOM.render(
     <RootNode />,
