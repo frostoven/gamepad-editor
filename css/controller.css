@@ -58,6 +58,24 @@
     flex-grow: 1;
 }
 
+.ui.basic.segment.log-container {
+    border-top: 3px double #737373;
+    max-height: 98px;
+    overflow: auto;
+    padding: 2px;
+}
+
+.ui.basic.segment.log-container p {
+    font-family: monospace;
+    font-size: 10pt;
+    padding-left: 4px;
+    margin: 0;
+}
+
+.ui.basic.segment.log-container p:nth-child(even) {
+    background-color: #535556;
+}
+
 .ui.segment.status-bar {
     height: var(--status-bar-height);
     padding: 0.3rem !important;
