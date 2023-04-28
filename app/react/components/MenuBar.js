@@ -23,7 +23,10 @@ const MenuBar = () => {
   helpMenu.append(new nw.MenuItem({
     label: 'About',
     click: () => {
-      nw.Window.open('about.html');
+      nw.Window.open('about.html', {
+        width: 640,
+        height: 480,
+      });
     },
   }));
   menu.append(new nw.MenuItem({
