@@ -1,10 +1,16 @@
 import React, {useState, useEffect} from 'react';
-import {Tab, Loader, Segment, Grid, List, Checkbox, Popup, Input} from 'semantic-ui-react';
+import {Menu, Segment, Grid, List, Checkbox, Popup, Input} from 'semantic-ui-react';
 
 const GamepadTester = () => {
   const [gamepads, setGamepads] = useState(Array(4).fill(null));
   const [logMessages, setLogMessages] = useState(['Press a button or move an analog stick to connect the controller.']);
   const [anyControllerConnected, setAnyControllerConnected] = useState(false);
+  const [hasConnectedOnce, setHasConnectedOnce] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const addToLog = (message) => {
+    setLogMessages((prevLogMessages) => [...prevLogMessages, message]);
+  };
 
   // useEffect hook used to update the gamepads state variable
   // with current connected gamepads
@@ -24,6 +30,7 @@ const GamepadTester = () => {
               ...prevLog,
               `Controller ${gamepad.id} connected in slot ${gamepad.index}.`,
             ]);
+            setHasConnectedOnce(true);
           }
         } else if (gamepads[index] && !gamepad) {
           setLogMessages((prevLog) => [
@@ -52,42 +59,51 @@ const GamepadTester = () => {
     };
   }, [gamepads]);
 
-  // creates an array of Tab panes for each connected gamepad
+  // adds 48 char truncation
+  const truncateText = (text, maxLength) => {
+    return text.length > maxLength ? text.slice(0, maxLength) + '…' : text;
+  };
+
+  // creates an array of Menu items for each connected gamepad
   const panes = gamepads.map((gamepad, index) => {
-    const tabName = gamepad ? gamepad.id : `Controller ${index + 1}`;
+    const fullTabName = gamepad ? gamepad.id : `Controller ${index + 1}`;
+    const truncatedTabName = truncateText(fullTabName, 48);
     return {
-      menuItem: tabName,
+      fullTabName: fullTabName,
+      truncatedTabName: truncatedTabName,
       render: () => (
-        <Tab.Pane>
-          <ControllerInfo gamepad={gamepad}/>
-        </Tab.Pane>
+        <ControllerInfo gamepad={gamepad} addToLog={addToLog} logMessages={logMessages}/>
       ),
     };
   });
 
-// displays log
-  const Log = ({ messages }) => {
-    return (
-      <Segment className="log-container">
-        {anyControllerConnected ? (
-          messages
-            .filter((message, index) => index !== 0)
-            .map((message, index) => <p key={index}>{message}</p>)
-        ) : (
-          <p>{messages[0]}</p>
-        )}
-      </Segment>
-    );
-  };
-
-  // displays the array of Tab panes
+  // displays the array of Menu items
   const connectedControllers = gamepads.filter(gamepad => gamepad).length;
 
+  const renderActiveController = () => {
+    const gamepad = gamepads[activeIndex];
+    return <ControllerInfo gamepad={gamepad} addToLog={addToLog} logMessages={logMessages}/>;
+  };
+
+  // moved log into return
   return (
     <div className="app-container">
       <div className="main-content">
-        <Tab panes={panes}/>
-        <Log messages={logMessages}/>
+        <Menu stackable pointing>
+          {panes.map((pane, index) => (
+            <Menu.Item key={index} active={activeIndex === index}
+                       onClick={() => setActiveIndex(index)}>{pane.truncatedTabName}</Menu.Item>
+          ))}
+        </Menu>
+        {renderActiveController()}
+        <Segment basic className="log-container">
+          {logMessages.map((message, index) => {
+            if (index === 0 && (anyControllerConnected || hasConnectedOnce)) {
+              return null;
+            }
+            return <p key={index}>{message}</p>;
+          })}
+        </Segment>
       </div>
       <Segment className="status-bar">Connected controllers: {connectedControllers}</Segment>
     </div>
@@ -95,7 +111,7 @@ const GamepadTester = () => {
 };
 
 // displays information about a specific gamepad
-const ControllerInfo = ({ gamepad }) => {
+const ControllerInfo = ({gamepad}) => {
   const [buttons, setButtons] = useState([]);
   const [axes, setAxes] = useState([]);
   const [deadzoneEnabled, setDeadzoneEnabled] = useState(false);
@@ -140,7 +156,6 @@ const ControllerInfo = ({ gamepad }) => {
   if (!gamepad) {
     return (
       <Segment basic>
-        <Loader active />
         <p>No controller connected</p>
       </Segment>
     );
@@ -223,13 +238,13 @@ const ControllerInfo = ({ gamepad }) => {
                 <Segment className="axis-container">
                   Axis {index}: {axis.toFixed(2)}
                   <div
-                    className="positive-axis-bar"
+                    className="negative-axis-bar"
                     style={{
                       height: axis >= 0 ? `${axis * 50}%` : '0%'
                     }}
                   ></div>
                   <div
-                    className="negative-axis-bar"
+                    className="positive-axis-bar"
                     style={{
                       height: axis < 0 ? `${Math.abs(axis) * 50}%` : '0%'
                     }}
