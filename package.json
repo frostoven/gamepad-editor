@@ -6,8 +6,8 @@
   "window": {
     "title": "Gamepad Profiler",
     "toolbar": false,
-    "width": 1104,
-    "height": 621,
+    "width": 1200,
+    "height": 700,
     "icon": "icon.png"
   },
   "js-flags": "--focus=true",

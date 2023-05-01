@@ -3,7 +3,7 @@ import {Menu, Segment, Grid, List, Checkbox, Popup, Input} from 'semantic-ui-rea
 
 const GamepadTester = () => {
   const [gamepads, setGamepads] = useState(Array(4).fill(null));
-  const [logMessages, setLogMessages] = useState(['Press a button or move an analog stick to connect the controller.']);
+  const [logMessages, setLogMessages] = useState(['Application booted.']);
   const [anyControllerConnected, setAnyControllerConnected] = useState(false);
   const [hasConnectedOnce, setHasConnectedOnce] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -89,22 +89,29 @@ const GamepadTester = () => {
   return (
     <div className="app-container">
       <div className="main-content">
-        <Menu stackable pointing>
+        <Menu stackable>
           {panes.map((pane, index) => (
-            <Menu.Item key={index} active={activeIndex === index}
-                       onClick={() => setActiveIndex(index)}>{pane.truncatedTabName}</Menu.Item>
+            <Menu.Item
+              key={index}
+              active={activeIndex === index}
+              onClick={() => setActiveIndex(index)}
+            >{pane.truncatedTabName}
+            </Menu.Item>
           ))}
         </Menu>
         {renderActiveController()}
-        <Segment basic className="log-container">
-          {logMessages.map((message, index) => {
-            if (index === 0 && (anyControllerConnected || hasConnectedOnce)) {
-              return null;
-            }
-            return <p key={index}>{message}</p>;
-          })}
-        </Segment>
       </div>
+
+      <Segment basic className="log-container">
+        {logMessages.map((message, index) => {
+          if (index === 0 && (anyControllerConnected || hasConnectedOnce)) {
+            return null;
+          }
+          return <p key={index}>{message}</p>;
+        })}
+      </Segment>
+
+      <div className="status-bar-spacer"/>
       <Segment className="status-bar">Connected controllers: {connectedControllers}</Segment>
     </div>
   );
@@ -156,7 +163,7 @@ const ControllerInfo = ({gamepad}) => {
   if (!gamepad) {
     return (
       <Segment basic>
-        <p>No controller connected</p>
+        <p>Press a button or move an analog stick to connect the controller.</p>
       </Segment>
     );
   }

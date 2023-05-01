@@ -1,3 +1,7 @@
+:root {
+    --status-bar-height: 32px;
+}
+
 #reactRoot {
     background-color: #474B4D;
 }
@@ -54,11 +58,44 @@
     flex-grow: 1;
 }
 
-.status-bar {
-    margin-top: auto;
-    background-color: #f9fafb;
+.ui.stackable.grid {
+    padding: 4px;
+}
+
+.ui.basic.segment.log-container {
+    border-top: 3px double #737373;
+    max-height: 98px;
+    overflow: auto;
+    padding: 2px;
+}
+
+.ui.basic.segment.log-container p {
+    font-family: monospace;
+    font-size: 10pt;
+    padding-left: 4px;
+    margin: 0;
+}
+
+.ui.basic.segment.log-container p:nth-child(even) {
+    background-color: #535556;
+}
+
+.ui.segment.status-bar {
+    height: var(--status-bar-height);
     padding: 0.3rem !important;
     text-align: left;
+    position: fixed;
+    bottom: 0;
+    border-top: 3px double #737373;
+    left: 0;
+    right: 0;
+    z-index: 10;
+}
+
+.status-bar-spacer {
+    /* Note: this is specifically to ensure the statusbar doesn't hide page
+       content, and should always match status-bar height. */
+    height: var(--status-bar-height);
 }
 
 .app-container {
