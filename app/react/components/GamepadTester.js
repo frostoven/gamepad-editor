@@ -3,6 +3,7 @@ import {Menu, Segment, Grid, List, Checkbox, Popup, Input} from 'semantic-ui-rea
 
 const GamepadTester = () => {
   const [gamepads, setGamepads] = useState(Array(4).fill(null));
+  const gamepadsRef = useRef(gamepads);
   const [logMessages, setLogMessages] = useState(['Application booted.']);
   const [anyControllerConnected, setAnyControllerConnected] = useState(false);
   const [hasConnectedOnce, setHasConnectedOnce] = useState(false);
@@ -25,24 +26,24 @@ const GamepadTester = () => {
       newGamepadsArray.forEach((gamepad, index) => {
         if (gamepad && gamepad.connected) {
           isConnected = true;
-          if (!gamepads[index]) {
+          if (!gamepadsRef.current[index]) {
             setLogMessages((prevLog) => [
               ...prevLog,
               `Controller ${gamepad.id} connected in slot ${gamepad.index}.`,
             ]);
             setHasConnectedOnce(true);
           }
-        } else if (gamepads[index] && !gamepad) {
+        } else if (gamepadsRef.current[index] && !gamepad) {
           setLogMessages((prevLog) => [
             ...prevLog,
-            `Controller ${gamepads[index].id} disconnected from slot ${gamepads[index].index}.`,
+            `Controller ${gamepadsRef.current[index].id} disconnected from slot ${gamepadsRef.current[index].index}.`,
           ]);
         }
       });
 
       setAnyControllerConnected(isConnected);
       setGamepads(newGamepadsArray);
-    };
+      gamepadsRef.current = newGamepadsArray;
 
     // interval that updates the gamepads state variable every 100ms
     const intervalId = setInterval(updateGamepads, 100);
