@@ -86,33 +86,22 @@ const GamepadTester = () => {
   };
 
   // moved log into return
+  // moved status, log, tabs out into separate components
   return (
     <div className="app-container">
       <div className="main-content">
-        <Menu stackable>
-          {panes.map((pane, index) => (
-            <Menu.Item
-              key={index}
-              active={activeIndex === index}
-              onClick={() => setActiveIndex(index)}
-            >{pane.truncatedTabName}
-            </Menu.Item>
-          ))}
-        </Menu>
+        <ControllerTabs panes={panes} activeIndex={activeIndex} setActiveIndex={setActiveIndex}/>
         {renderActiveController()}
       </div>
 
-      <Segment basic className="log-container">
-        {logMessages.map((message, index) => {
-          if (index === 0 && (anyControllerConnected || hasConnectedOnce)) {
-            return null;
-          }
-          return <p key={index}>{message}</p>;
-        })}
-      </Segment>
+      <LogContainer
+        logMessages={logMessages}
+        anyControllerConnected={anyControllerConnected}
+        hasConnectedOnce={hasConnectedOnce}
+      />
 
       <div className="status-bar-spacer"/>
-      <Segment className="status-bar">Connected controllers: {connectedControllers}</Segment>
+      <StatusBar connectedControllers={connectedControllers}/>
     </div>
   );
 };
@@ -199,40 +188,17 @@ const ControllerInfo = ({gamepad}) => {
         <Grid.Column>
           <h3>Buttons</h3>
           <List horizontal>
-            {gamepad.buttons.map((button, index) => {
-              const buttonName = buttonNames[index] || `Button ${index}`;
-              return (
+            {
+              buttons.map((button, index) => (
                 <List.Item key={index}>
-                  <Popup
-                    trigger={
-                      <Segment className="button-container">
-                        {buttonName}: {button.value.toFixed(2)}
-                        <div
-                          className="bar"
-                          style={{height: `${button.value * 100}%`}}
-                        ></div>
-                      </Segment>
-                    }
-                    on="click"
-                    hideOnScroll
-                    position="top center"
-                    content={
-                      <div>
-                        <Input
-                          placeholder="Enter new name"
-                          defaultValue={buttonName}
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter") {
-                              handleRenameButtonClick(index, e.target.value);
-                            }
-                          }}
-                        />
-                      </div>
-                    }
+                  <ButtonInfo
+                    button={button}
+                    buttonName={buttonNames[index] || `Button ${index}`}
+                    onRenameButtonClick={(newName) => handleRenameButtonClick(index, newName)}
                   />
                 </List.Item>
-              );
-            })}
+              ))
+            }
           </List>
         </Grid.Column>
       </Grid.Row>
@@ -240,25 +206,13 @@ const ControllerInfo = ({gamepad}) => {
         <Grid.Column>
           <h3>Axes</h3>
           <List horizontal>
-            {axes.map((axis, index) => (
-              <List.Item key={index}>
-                <Segment className="axis-container">
-                  Axis {index}: {axis.toFixed(2)}
-                  <div
-                    className="negative-axis-bar"
-                    style={{
-                      height: axis >= 0 ? `${axis * 50}%` : '0%'
-                    }}
-                  ></div>
-                  <div
-                    className="positive-axis-bar"
-                    style={{
-                      height: axis < 0 ? `${Math.abs(axis) * 50}%` : '0%'
-                    }}
-                  ></div>
-                </Segment>
-              </List.Item>
-            ))}
+            {
+              axes.map((axis, index) => (
+                <List.Item key={index}>
+                  <AxisInfo axisValue={axis} index={index}/>
+                </List.Item>
+              ))
+            }
           </List>
         </Grid.Column>
       </Grid.Row>
@@ -286,6 +240,95 @@ const ControllerInfo = ({gamepad}) => {
         </Grid.Column>
       </Grid.Row>
     </Grid>
+  );
+};
+
+const ControllerTabs = ({panes, activeIndex, setActiveIndex}) => {
+  return (
+    <Menu stackable>
+      {panes.map((pane, index) => (
+        <Menu.Item
+          key={index}
+          active={activeIndex === index}
+          onClick={() => setActiveIndex(index)}
+        >
+          {pane.truncatedTabName}
+        </Menu.Item>
+      ))}
+    </Menu>
+  );
+};
+
+const LogContainer = ({logMessages, anyControllerConnected, hasConnectedOnce}) => {
+  return (
+    <Segment basic className="log-container">
+      {logMessages.map((message, index) => {
+        if (index === 0 && (anyControllerConnected || hasConnectedOnce)) {
+          return null;
+        }
+        return <p key={index}>{message}</p>;
+      })}
+    </Segment>
+  );
+};
+
+const StatusBar = ({connectedControllers}) => {
+  return (
+    <Segment className="status-bar">
+      Connected controllers: {connectedControllers}
+    </Segment>
+  );
+};
+
+const ButtonInfo = ({button, buttonName, onRenameButtonClick}) => {
+  return (
+    <Popup
+      trigger={
+        <Segment className="button-container">
+          {buttonName}: {button.value.toFixed(2)}
+          <div
+            className="bar"
+            style={{height: `${button.value * 100}%`}}
+          ></div>
+        </Segment>
+      }
+      on="click"
+      hideOnScroll
+      position="top center"
+      content={
+        <div>
+          <Input
+            placeholder="Enter new name"
+            defaultValue={buttonName}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                onRenameButtonClick(e.target.value);
+              }
+            }}
+          />
+        </div>
+      }
+    />
+  );
+};
+
+const AxisInfo = ({axisValue, index}) => {
+  return (
+    <Segment className="axis-container">
+      Axis {index}: {axisValue.toFixed(2)}
+      <div
+        className="negative-axis-bar"
+        style={{
+          height: axisValue >= 0 ? `${axisValue * 50}%` : '0%'
+        }}
+      ></div>
+      <div
+        className="positive-axis-bar"
+        style={{
+          height: axisValue < 0 ? `${Math.abs(axisValue) * 50}%` : '0%'
+        }}
+      ></div>
+    </Segment>
   );
 };
 
