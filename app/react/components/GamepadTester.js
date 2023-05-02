@@ -66,7 +66,7 @@ const GamepadTester = () => {
   };
 
   // creates an array of Menu items for each connected gamepad
-  const panes = gamepads.map((gamepad, index) => {
+  const panes = useMemo(() => gamepads.map((gamepad, index) => {
     const fullTabName = gamepad ? gamepad.id : `Controller ${index + 1}`;
     const truncatedTabName = truncateText(fullTabName, 48);
     return {
