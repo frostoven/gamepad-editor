@@ -16,6 +16,7 @@ const GamepadTester = () => {
   // useEffect hook used to update the gamepads state variable
   // with current connected gamepads
   useEffect(() => {
+    let animationFrameId;
     // function that updates the gamepads state variable
     // with current connected gamepads
     const updateGamepads = () => {
@@ -45,20 +46,20 @@ const GamepadTester = () => {
       setGamepads(newGamepadsArray);
       gamepadsRef.current = newGamepadsArray;
 
-    // interval that updates the gamepads state variable every 100ms
-    const intervalId = setInterval(updateGamepads, 100);
-
-    // event listeners that listen for connected and disconnected gamepads
-    window.addEventListener('gamepadconnected', updateGamepads);
-    window.addEventListener('gamepaddisconnected', updateGamepads);
-
-    // cleanup function that removes event listeners and clears the interval
-    return () => {
-      clearInterval(intervalId);
-      window.removeEventListener('gamepadconnected', updateGamepads);
-      window.removeEventListener('gamepaddisconnected', updateGamepads);
+      // Schedule the next gamepad input processing
+      animationFrameId = requestAnimationFrame(updateGamepads);
     };
-  }, [gamepads]);
+
+    // Start the gamepad input processing loop
+    updateGamepads();
+
+    // Clean up the loop when the component unmounts
+    return () => {
+      if (animationFrameId !== undefined) {
+        cancelAnimationFrame(animationFrameId);
+      }
+    };
+  }, []);
 
   // adds 48 char truncation
   const truncateText = (text, maxLength) => {
