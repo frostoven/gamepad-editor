@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef, useCallback, useMemo} from 'react';
 import {Menu, Segment, Grid, List, Checkbox, Popup, Input} from 'semantic-ui-react';
 
 const GamepadTester = () => {
@@ -62,9 +62,9 @@ const GamepadTester = () => {
   }, []);
 
   // adds 48 char truncation
-  const truncateText = (text, maxLength) => {
+  const truncateText = useCallback((text, maxLength) => {
     return text.length > maxLength ? text.slice(0, maxLength) + '…' : text;
-  };
+  }, []);
 
   // creates an array of Menu items for each connected gamepad
   const panes = useMemo(() => gamepads.map((gamepad, index) => {
@@ -77,7 +77,7 @@ const GamepadTester = () => {
         <ControllerInfo gamepad={gamepad} addToLog={addToLog} logMessages={logMessages}/>
       ),
     };
-  });
+  }), [gamepads, truncateText, addToLog, logMessages]);
 
   // displays the array of Menu items
   const connectedControllers = gamepads.filter(gamepad => gamepad).length;
