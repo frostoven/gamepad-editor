@@ -147,7 +147,7 @@ const ControllerInfo = ({ gamepad, addToLog }) => {
 
     gamepad.axes.forEach((axis, index) => {
       const axisValue = deadzoneEnabled && Math.abs(axis) < deadzoneValue ? 0 : axis;
-      console.log(`Axis ${index}: current value: ${axisValue}, cached value: ${axisCache.current[index]}`);
+      // console.log(`Axis ${index}: current value: ${axisValue}, cached value: ${axisCache.current[index]}`);
 
       if (axisCache.current[index] !== axisValue) {
         axisChanged = true;
