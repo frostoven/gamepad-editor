@@ -109,7 +109,7 @@ const GamepadTester = () => {
 };
 
 // displays information about a specific gamepad
-const ControllerInfo = ({gamepad}) => {
+const ControllerInfo = ({ gamepad, addToLog }) => {
   const [buttons, setButtons] = useState([]);
   const [axes, setAxes] = useState([]);
   const [deadzoneEnabled, setDeadzoneEnabled] = useState(false);
@@ -117,6 +117,52 @@ const ControllerInfo = ({gamepad}) => {
   const [buttonNames, setButtonNames] = useState(
     Array(gamepad?.buttons.length).fill("")
   );
+  const buttonCache = useRef({});
+  const axisCache = useRef({});
+
+  const processGamepadData = () => {
+    // console.log("processGamepadData called");
+    if (!gamepad) return;
+
+    let buttonChanged = false;
+
+    // Process buttons
+    gamepad.buttons.forEach((button, index) => {
+      // console.log(`Button ${index}: current value: ${button.value}, cached value: ${buttonCache.current[index]}`);
+      if (buttonCache.current[index] !== button.value) {
+        buttonChanged = true;
+        addToLog(`[input] button bt${index} changed to ${button.value}`);
+        buttonCache.current[index] = button.value;
+      }
+    });
+
+    if (buttonChanged) {
+      gamepad.buttons.forEach((button, index) => {
+        addToLog(`[input] button bt${index} state: ${button.value}`);
+      });
+    }
+
+    // Process axes (same logic as for buttons)
+    let axisChanged = false;
+
+    gamepad.axes.forEach((axis, index) => {
+      const axisValue = deadzoneEnabled && Math.abs(axis) < deadzoneValue ? 0 : axis;
+      console.log(`Axis ${index}: current value: ${axisValue}, cached value: ${axisCache.current[index]}`);
+
+      if (axisCache.current[index] !== axisValue) {
+        axisChanged = true;
+        addToLog(`[input] axis ax${index} changed to ${axisValue}`);
+        axisCache.current[index] = axisValue;
+      }
+    });
+
+    if (axisChanged) {
+      gamepad.axes.forEach((axis, index) => {
+        const axisValue = deadzoneEnabled && Math.abs(axis) < deadzoneValue ? 0 : axis;
+        addToLog(`[input] axis ax${index} state: ${axisValue}`);
+      });
+    }
+  };
 
   const handleRenameButtonClick = (index, newName) => {
     setButtonNames((prevButtonNames) => {
@@ -148,6 +194,7 @@ const ControllerInfo = ({gamepad}) => {
         deadzoneEnabled && Math.abs(axis) < deadzoneValue ? 0 : axis
       )
     );
+    processGamepadData();
   }, [gamepad, deadzoneEnabled, deadzoneValue]);
 
   // displays message if no gamepad is connected
