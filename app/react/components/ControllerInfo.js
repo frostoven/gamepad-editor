@@ -2,6 +2,8 @@ import React, {useState, useEffect, useRef} from 'react';
 import {Segment, Grid, List, Checkbox} from 'semantic-ui-react';
 import AxisInfo from "./AxisInfo";
 import ButtonInfo from "./ButtonInfo";
+import ButtonNamesManager from './ButtonNamesManager';
+
 
 // displays information about a specific gamepad
 const ControllerInfo = ({ gamepad }) => {
@@ -9,11 +11,13 @@ const ControllerInfo = ({ gamepad }) => {
   const [axes, setAxes] = useState([]);
   const [deadzoneEnabled, setDeadzoneEnabled] = useState(false);
   const [deadzoneValue, setDeadzoneValue] = useState(0.15);
-  const [buttonNames, setButtonNames] = useState(
-    Array(gamepad?.buttons.length).fill("")
-  );
   const buttonCache = useRef({});
   const axisCache = useRef({});
+
+  const {
+    buttonNames,
+    handleRenameButtonClick,
+  } = ButtonNamesManager({ gamepad });
 
   const processGamepadData = () => {
     // console.log("processGamepadData called");
@@ -41,14 +45,6 @@ const ControllerInfo = ({ gamepad }) => {
         axisChanged = true;
         axisCache.current[index] = axisValue;
       }
-    });
-  };
-
-  const handleRenameButtonClick = (index, newName) => {
-    setButtonNames((prevButtonNames) => {
-      const newButtonNames = [...prevButtonNames];
-      newButtonNames[index] = newName;
-      return newButtonNames;
     });
   };
 
