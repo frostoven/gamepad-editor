@@ -6,13 +6,28 @@ const userDataDir = getUserDataDir();
 const buttonNamesFilePath = path.join(userDataDir, 'button_names.json');
 const fs = require('fs');
 
-const readButtonNamesFromFile = () => {
-  try {
-    const data = fs.readFileSync(buttonNamesFilePath, 'utf-8');
-    return data ? JSON.parse(data) : {};
-  } catch (error) {
-    console.error('Error reading button names file:', error);
-    return {};
+const generateDefaultButtonNames = (gamepad) => {
+  const defaultButtonNames = {};
+  for (let i = 0; i < gamepad.buttons.length; i++) {
+    defaultButtonNames[`bt${i}`] = `Button ${i}`;
+  }
+  for (let i = 0; i < gamepad.axes.length; i++) {
+    defaultButtonNames[`ax${i}`] = `Axis ${i}`;
+  }
+  return defaultButtonNames;
+};
+
+const readButtonNamesFromFile = (gamepad) => {
+  if (fs.existsSync(buttonNamesFilePath)) {
+    try {
+      const data = fs.readFileSync(buttonNamesFilePath, 'utf-8');
+      return JSON.parse(data);
+    } catch (err) {
+      console.error('Error reading button names file:', err);
+      return generateDefaultButtonNames(gamepad);
+    }
+  } else {
+    return generateDefaultButtonNames(gamepad);
   }
 };
 
