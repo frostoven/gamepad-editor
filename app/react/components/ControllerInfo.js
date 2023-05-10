@@ -13,11 +13,7 @@ const ControllerInfo = ({ gamepad }) => {
   const [deadzoneValue, setDeadzoneValue] = useState(0.15);
   const buttonCache = useRef({});
   const axisCache = useRef({});
-
-  const {
-    buttonNames,
-    handleRenameButtonClick,
-  } = ButtonNamesManager({ gamepad });
+  const { buttonNames, handleRenameButtonClick } = ButtonNamesManager({ gamepad });
 
   const processGamepadData = () => {
     // console.log("processGamepadData called");
@@ -118,7 +114,7 @@ const ControllerInfo = ({ gamepad }) => {
                 <List.Item key={index}>
                   <ButtonInfo
                     button={button}
-                    buttonName={buttonNames[index] || `Button ${index}`}
+                    buttonName={buttonNames[`bt${index}`] || `Button ${index}`}
                     onRenameButtonClick={(newName) => handleRenameButtonClick(index, newName)}
                   />
                 </List.Item>
@@ -134,7 +130,7 @@ const ControllerInfo = ({ gamepad }) => {
             {
               axes.map((axis, index) => (
                 <List.Item key={index}>
-                  <AxisInfo axisValue={axis} index={index}/>
+                  <AxisInfo axisValue={axis} index={index} axisName={buttonNames[`ax${index}`] || `Axis ${index}`} />
                 </List.Item>
               ))
             }
