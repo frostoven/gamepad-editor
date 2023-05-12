@@ -53,7 +53,7 @@ const cacheChangeEvent = new ChangeTracker();
 
 // --- Profile functions --------------------------------------------------- //
 
-export function getUserDataDir() {
+function getUserDataDir() {
   // Dev note: please always follow paths with a slash, and don't proceed dirs
   // with slashes when calling this function. The reason for this is that, if
   // we ever typo'd a new path and somehow managed to release this to users, it

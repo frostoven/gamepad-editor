@@ -1,63 +1,72 @@
 import { useEffect, useState } from 'react';
 import path from 'path';
-import { getUserDataDir } from '../../userProfile';
+import userProfile from '../../userProfile';
+import fs from 'fs';
 
-const userDataDir = getUserDataDir();
+const userDataDir = userProfile.getUserDataDir();
 const buttonNamesFilePath = path.join(userDataDir, 'button_names.json');
-const fs = require('fs');
 
 const generateDefaultButtonNames = (gamepad) => {
   const defaultButtonNames = {};
-  for (let i = 0; i < gamepad.buttons.length; i++) {
-    defaultButtonNames[`bt${i}`] = `Button ${i}`;
+
+  if (gamepad && gamepad.buttons) {
+    for (let i = 0; i < gamepad.buttons.length; i++) {
+      defaultButtonNames[`bt${i}`] = `Button ${i}`;
+    }
   }
-  for (let i = 0; i < gamepad.axes.length; i++) {
-    defaultButtonNames[`ax${i}`] = `Axis ${i}`;
+
+  if (gamepad && gamepad.axes) {
+    for (let i = 0; i < gamepad.axes.length; i++) {
+      defaultButtonNames[`ax${i}`] = `Axis ${i}`;
+    }
   }
+
   return defaultButtonNames;
 };
 
-const readButtonNamesFromFile = (gamepad) => {
-  if (fs.existsSync(buttonNamesFilePath)) {
-    try {
-      const data = fs.readFileSync(buttonNamesFilePath, 'utf-8');
-      return JSON.parse(data);
-    } catch (err) {
+const readButtonNamesFromFile = async (gamepad) => {
+  const defaultButtonNames = generateDefaultButtonNames(gamepad);
+  try {
+    const data = await fs.promises.readFile(buttonNamesFilePath, 'utf-8');
+    const storedButtonNames = JSON.parse(data);
+    return { ...defaultButtonNames, ...storedButtonNames };
+  } catch (err) {
+    if (err.code === 'ENOENT') {
+      console.log('File not found, returning default button names');
+      return defaultButtonNames;
+    } else {
       console.error('Error reading button names file:', err);
-      return generateDefaultButtonNames(gamepad);
     }
-  } else {
-    return generateDefaultButtonNames(gamepad);
   }
 };
 
-const saveButtonNamesToFile = (buttonNames) => {
+const saveButtonNamesToFile = async (buttonNames) => {
   try {
     const data = JSON.stringify(buttonNames, null, 2);
-    fs.writeFileSync(buttonNamesFilePath, data, 'utf-8');
+    await fs.promises.writeFile(buttonNamesFilePath, data, 'utf-8');
   } catch (err) {
     console.error('Error writing button names file:', err);
   }
 };
 
 export const ButtonNamesManager = ({ gamepad }) => {
-  const [buttonNames, setButtonNames] = useState(gamepad ? Array(gamepad.buttons.length).fill("") : []);
+  const [buttonNames, setButtonNames] = useState(() => readButtonNamesFromFile(gamepad));
 
   useEffect(() => {
     if (gamepad) {
-      const storedButtonNames = readButtonNamesFromFile(gamepad);
-      setButtonNames(storedButtonNames);
+      // Whenever the gamepad prop changes, read button names from file and update state
+      readButtonNamesFromFile(gamepad).then(storedButtonNames => {
+        setButtonNames(storedButtonNames);
+      });
     }
   }, [gamepad]);
 
-  const handleRenameButtonClick = (index, newName, isAxis) => {
-    setButtonNames((prevButtonNames) => {
-      const key = isAxis ? `ax${index}` : `bt${index}`;
-      const newButtonNames = { ...prevButtonNames };
-      newButtonNames[key] = newName;
-      saveButtonNamesToFile(newButtonNames);
-      return newButtonNames;
-    });
+  const handleRenameButtonClick = async (index, newName, isAxis) => {
+    const key = isAxis ? `ax${index}` : `bt${index}`;
+    const newButtonNames = { ...buttonNames };
+    newButtonNames[key] = newName;
+    await saveButtonNamesToFile(newButtonNames);
+    setButtonNames(newButtonNames);
   };
 
   return {
