@@ -3,8 +3,19 @@ import path from 'path';
 import userProfile from '../../userProfile';
 import fs from 'fs';
 
-const userDataDir = userProfile.getUserDataDir();
-const buttonNamesFilePath = path.join(userDataDir, 'button_names.json');
+const profileDir = path.join(userProfile.getUserDataDir(), 'Frostoven/GamepadProfiler');
+
+const checkAndCreateDir = async (dir) => {
+  try {
+    await fs.promises.access(dir);
+  } catch (e) {
+    await fs.promises.mkdir(dir, { recursive: true });
+  }
+};
+
+checkAndCreateDir(profileDir);
+
+const buttonNamesFilePath = path.join(profileDir, 'button_names.json');
 
 const generateDefaultButtonNames = (gamepad) => {
   const defaultButtonNames = {};
