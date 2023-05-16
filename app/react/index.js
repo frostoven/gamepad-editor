@@ -3,7 +3,6 @@ import React from 'react';
 import GamepadManager from '../GamepadManager';
 import MenuBar from './components/MenuBar';
 import GamepadTester from "./components/GamepadTester";
-import { checkAndCreateDir } from '../directoryManager';
 
 export default class RootNode extends React.Component {
   constructor(props) {
@@ -11,9 +10,7 @@ export default class RootNode extends React.Component {
     this.gamepadManager = new GamepadManager();
   }
 
-  async componentDidMount() {
-    const profileDir = checkAndCreateDir();
-    await profileDir;
+  componentDidMount() {
     // this.gamepadManager.onInputChange.getEveryChange((data) => {
     //   console.log('-> Gamepad data:', data);
     // });
