@@ -6,16 +6,9 @@ import fs from 'fs';
 const profileDir = path.join(userProfile.getUserDataDir(), 'Frostoven/GamepadProfiler');
 const buttonNamesFilePath = path.join(profileDir, 'button_names.json');
 
-const checkAndCreateDir = async (dir) => {
-  try {
-    await fs.promises.access(dir);
-  } catch (e) {
-    await fs.promises.mkdir(dir, { recursive: true });
-  }
-};
-
 const generateDefaultButtonNames = (gamepad) => {
   const defaultButtonNames = {};
+
   if (gamepad && gamepad.buttons) {
     for (let i = 0; i < gamepad.buttons.length; i++) {
       defaultButtonNames[`bt${i}`] = `Button ${i}`;
@@ -27,6 +20,7 @@ const generateDefaultButtonNames = (gamepad) => {
       defaultButtonNames[`ax${i}`] = `Axis ${i}`;
     }
   }
+
   return defaultButtonNames;
 };
 
@@ -58,16 +52,12 @@ const saveButtonNamesToFile = async (buttonNames) => {
 export const ButtonNamesManager = ({ gamepad }) => {
   const [buttonNames, setButtonNames] = useState(() => generateDefaultButtonNames(gamepad));
 
-  const initializeButtonNames = async () => {
-    await checkAndCreateDir(profileDir);
-    if (gamepad) {
-      const storedButtonNames = await readButtonNamesFromFile(gamepad);
-      setButtonNames(storedButtonNames);
-    }
-  };
-
   useEffect(() => {
-    initializeButtonNames();
+    if (gamepad) {
+      readButtonNamesFromFile(gamepad).then(storedButtonNames => {
+        setButtonNames(storedButtonNames);
+      });
+    }
   }, [gamepad]);
 
   const handleRenameButtonClick = async (index, newName, isAxis) => {
