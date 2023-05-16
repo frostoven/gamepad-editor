@@ -2,7 +2,7 @@ import React, {useState, useEffect, useRef} from 'react';
 import {Segment, Grid, List, Checkbox} from 'semantic-ui-react';
 import AxisInfo from "./AxisInfo";
 import ButtonInfo from "./ButtonInfo";
-import ButtonNamesManager from './ButtonNamesManager';
+import { ButtonNamesManager } from './ButtonNamesManager';
 
 
 // displays information about a specific gamepad
