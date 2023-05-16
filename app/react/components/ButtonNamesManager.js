@@ -1,10 +1,18 @@
-import { useEffect, useState } from 'react';
+import {useEffect, useState} from 'react';
 import path from 'path';
-import userProfile from '../../userProfile';
 import fs from 'fs';
+import userProfile from '../../userProfile';
 
 const profileDir = path.join(userProfile.getUserDataDir(), 'Frostoven/GamepadProfiler');
 const buttonNamesFilePath = path.join(profileDir, 'button_names.json');
+
+const checkAndCreateDir = async () => {
+  try {
+    await fs.promises.access(profileDir);
+  } catch (e) {
+    await fs.promises.mkdir(profileDir, {recursive: true});
+  }
+};
 
 const generateDefaultButtonNames = (gamepad) => {
   const defaultButtonNames = {};
@@ -29,7 +37,7 @@ const readButtonNamesFromFile = async (gamepad) => {
   try {
     const data = await fs.promises.readFile(buttonNamesFilePath, 'utf-8');
     const storedButtonNames = JSON.parse(data);
-    return { ...defaultButtonNames, ...storedButtonNames };
+    return {...defaultButtonNames, ...storedButtonNames};
   } catch (err) {
     if (err.code === 'ENOENT') {
       console.log('File not found, returning default button names');
@@ -49,20 +57,23 @@ const saveButtonNamesToFile = async (buttonNames) => {
   }
 };
 
-export const ButtonNamesManager = ({ gamepad }) => {
+const ButtonNamesManager = ({gamepad}) => {
   const [buttonNames, setButtonNames] = useState(() => generateDefaultButtonNames(gamepad));
 
   useEffect(() => {
-    if (gamepad) {
-      readButtonNamesFromFile(gamepad).then(storedButtonNames => {
-        setButtonNames(storedButtonNames);
-      });
-    }
+    (async () => {
+      // Wait for the directory to be created
+      await checkAndCreateDir();
+
+      // Now we're sure that the directory exists, we can read from it
+      const buttonNamesFromFile = await readButtonNamesFromFile(gamepad);
+      setButtonNames(buttonNamesFromFile);
+    })();
   }, [gamepad]);
 
   const handleRenameButtonClick = async (index, newName, isAxis) => {
     const key = isAxis ? `ax${index}` : `bt${index}`;
-    const newButtonNames = { ...buttonNames };
+    const newButtonNames = {...buttonNames};
     newButtonNames[key] = newName;
     await saveButtonNamesToFile(newButtonNames);
     setButtonNames(newButtonNames);
@@ -74,4 +85,7 @@ export const ButtonNamesManager = ({ gamepad }) => {
   };
 };
 
-export default ButtonNamesManager;
+export {
+  ButtonNamesManager,
+  checkAndCreateDir
+}
