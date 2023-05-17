@@ -4,7 +4,7 @@ import React from 'react';
 import * as ReactDOM from 'react-dom';
 import { onDocumentReady } from './local/windowLoadListener';
 import RootNode from './react';
-import  { checkAndCreateDir }  from './local/FileOperations';
+import  { checkAndCreateDir }  from './local/fileOperations';
 
 
 // Generated using https://fsymbols.com/signs/square/
