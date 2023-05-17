@@ -2,9 +2,9 @@ import {useEffect, useState} from 'react';
 import path from 'path';
 import fs from 'fs';
 import userProfile from '../../userProfile';
+import {readButtonNamesFromFile, saveButtonNamesToFile} from './FileOperations'
 
 const profileDir = path.join(userProfile.getUserDataDir(), 'Frostoven/GamepadProfiler');
-const buttonNamesFilePath = path.join(profileDir, 'button_names.json');
 
 const checkAndCreateDir = async () => {
   try {
@@ -32,43 +32,16 @@ const generateDefaultButtonNames = (gamepad) => {
   return defaultButtonNames;
 };
 
-const readButtonNamesFromFile = async (gamepad) => {
-  const defaultButtonNames = generateDefaultButtonNames(gamepad);
-  try {
-    const data = await fs.promises.readFile(buttonNamesFilePath, 'utf-8');
-    const storedButtonNames = JSON.parse(data);
-    return {...defaultButtonNames, ...storedButtonNames};
-  } catch (err) {
-    if (err.code === 'ENOENT') {
-      console.log('File not found, returning default button names');
-      return defaultButtonNames;
-    } else {
-      console.error('Error reading button names file:', err);
-    }
-  }
-};
-
-const saveButtonNamesToFile = async (buttonNames) => {
-  try {
-    const data = JSON.stringify(buttonNames, null, 2);
-    await fs.promises.writeFile(buttonNamesFilePath, data, 'utf-8');
-  } catch (err) {
-    console.error('Error writing button names file:', err);
-  }
-};
-
 const ButtonNamesManager = ({gamepad}) => {
   const [buttonNames, setButtonNames] = useState(() => generateDefaultButtonNames(gamepad));
 
   useEffect(() => {
-    (async () => {
-      // Wait for the directory to be created
-      await checkAndCreateDir();
-
-      // Now we're sure that the directory exists, we can read from it
-      const buttonNamesFromFile = await readButtonNamesFromFile(gamepad);
-      setButtonNames(buttonNamesFromFile);
-    })();
+    if (gamepad) {
+      // Whenever the gamepad prop changes, read button names from file and update state
+      readButtonNamesFromFile(gamepad).then(storedButtonNames => {
+        setButtonNames(storedButtonNames);
+      });
+    }
   }, [gamepad]);
 
   const handleRenameButtonClick = async (index, newName, isAxis) => {
@@ -87,5 +60,6 @@ const ButtonNamesManager = ({gamepad}) => {
 
 export {
   ButtonNamesManager,
-  checkAndCreateDir
+  checkAndCreateDir,
+  generateDefaultButtonNames
 }
