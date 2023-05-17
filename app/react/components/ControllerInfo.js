@@ -2,6 +2,9 @@ import React, {useState, useEffect, useRef} from 'react';
 import {Segment, Grid, List, Checkbox} from 'semantic-ui-react';
 import AxisInfo from "./AxisInfo";
 import ButtonInfo from "./ButtonInfo";
+import {readButtonNamesFromFile, saveButtonNamesToFile} from '../../local/fileOperations'
+import {generateDefaultButtonNames} from '../../local/gamepadUtils'
+
 
 // displays information about a specific gamepad
 const ControllerInfo = ({ gamepad }) => {
@@ -9,11 +12,18 @@ const ControllerInfo = ({ gamepad }) => {
   const [axes, setAxes] = useState([]);
   const [deadzoneEnabled, setDeadzoneEnabled] = useState(false);
   const [deadzoneValue, setDeadzoneValue] = useState(0.15);
-  const [buttonNames, setButtonNames] = useState(
-    Array(gamepad?.buttons.length).fill("")
-  );
   const buttonCache = useRef({});
   const axisCache = useRef({});
+  const [buttonNames, setButtonNames] = useState(() => generateDefaultButtonNames(gamepad));
+
+  useEffect(() => {
+    if (gamepad) {
+      // Whenever the gamepad prop changes, read button names from file and update state
+      readButtonNamesFromFile(gamepad).then(storedButtonNames => {
+        setButtonNames(storedButtonNames);
+      });
+    }
+  }, [gamepad]);
 
   const processGamepadData = () => {
     // console.log("processGamepadData called");
@@ -44,14 +54,6 @@ const ControllerInfo = ({ gamepad }) => {
     });
   };
 
-  const handleRenameButtonClick = (index, newName) => {
-    setButtonNames((prevButtonNames) => {
-      const newButtonNames = [...prevButtonNames];
-      newButtonNames[index] = newName;
-      return newButtonNames;
-    });
-  };
-
   const handleDeadzoneToggle = () => {
     setDeadzoneEnabled(!deadzoneEnabled);
   };
@@ -61,6 +63,14 @@ const ControllerInfo = ({ gamepad }) => {
     if (newValue >= 0 && newValue <= 1) {
       setDeadzoneValue(newValue);
     }
+  };
+
+  const handleRenameButtonClick = async (index, newName, isAxis) => {
+    const key = isAxis ? `ax${index}` : `bt${index}`;
+    const newButtonNames = {...buttonNames};
+    newButtonNames[key] = newName;
+    await saveButtonNamesToFile(newButtonNames);
+    setButtonNames(newButtonNames);
   };
 
   // useEffect hook used to update the buttons and axes state variables
@@ -122,7 +132,7 @@ const ControllerInfo = ({ gamepad }) => {
                 <List.Item key={index}>
                   <ButtonInfo
                     button={button}
-                    buttonName={buttonNames[index] || `Button ${index}`}
+                    buttonName={buttonNames[`bt${index}`] || `Button ${index}`}
                     onRenameButtonClick={(newName) => handleRenameButtonClick(index, newName)}
                   />
                 </List.Item>
@@ -138,7 +148,7 @@ const ControllerInfo = ({ gamepad }) => {
             {
               axes.map((axis, index) => (
                 <List.Item key={index}>
-                  <AxisInfo axisValue={axis} index={index}/>
+                  <AxisInfo axisValue={axis} index={index} axisName={buttonNames[`ax${index}`] || `Axis ${index}`} />
                 </List.Item>
               ))
             }
