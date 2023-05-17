@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react';
 import path from 'path';
 import fs from 'fs';
 import userProfile from '../../userProfile';
-import {readButtonNamesFromFile, saveButtonNamesToFile} from './FileOperations'
+import {readButtonNamesFromFile, saveButtonNamesToFile} from '../../local/FileOperations'
 
 const profileDir = path.join(userProfile.getUserDataDir(), 'Frostoven/GamepadProfiler');
 
