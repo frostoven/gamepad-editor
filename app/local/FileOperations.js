@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import userProfile from '../userProfile'
-import { generateDefaultButtonNames } from '../react/components/ButtonNamesManager'
+import {generateDefaultButtonNames} from './gamepadUtils'
 
 const profileDir = path.join(userProfile.getUserDataDir(), 'Frostoven/GamepadProfiler');
 const buttonNamesFilePath = path.join(profileDir, 'button_names.json');
@@ -42,5 +42,5 @@ const saveButtonNamesToFile = async (buttonNames) => {
 export {
   saveButtonNamesToFile,
   readButtonNamesFromFile,
-  checkAndCreateDir
+  checkAndCreateDir,
 }
