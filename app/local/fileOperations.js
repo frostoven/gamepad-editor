@@ -3,7 +3,7 @@ import path from 'path';
 import userProfile from '../userProfile'
 import {generateDefaultButtonNames} from './gamepadUtils'
 
-const profileDir = path.join(userProfile.getUserDataDir(), 'Frostoven/GamepadProfiler');
+const profileDir = path.join(userProfile.getUserDataDir(), 'Frostoven/GamepadEditor');
 const buttonNamesFilePath = path.join(profileDir, 'button_names.json');
 
 const checkAndCreateDir = async () => {
