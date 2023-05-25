@@ -1,4 +1,4 @@
-const gamepadButtons = [
+const defaultGamepadButtons  = [
   {
     keywords: ["Xbox"],
     buttons: {
@@ -18,6 +18,7 @@ const gamepadButtons = [
       bt13: "Down",
       bt14: "Left",
       bt15: "Right",
+      bt16: "Xbox",
       ax0: "Left Stick X Axis",
       ax1: "Left Stick Y Axis",
       ax2: "Right Stick X Axis",
@@ -43,6 +44,7 @@ const gamepadButtons = [
       bt13: "Down",
       bt14: "Left",
       bt15: "Right",
+      bt16: "PS",
       ax0: "Left Stick X Axis",
       ax1: "Left Stick Y Axis",
       ax2: "Right Stick X Axis",
@@ -50,3 +52,7 @@ const gamepadButtons = [
     },
   },
 ];
+
+export {
+  defaultGamepadButtons
+}
