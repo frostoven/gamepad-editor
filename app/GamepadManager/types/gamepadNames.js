@@ -99,11 +99,10 @@ friendlyButtonNames['Xbox 360 Controller'] = {
   bt13: 'D-Pad Down',
   bt14: 'D-Pad Left',
   bt15: 'D-Pad Right',
-  bt16: 'Xbox Bt 16',
+  bt16: 'Xbox Button',
   bt17: 'Xbox Bt 17',
   bt18: 'Xbox Bt 18',
 };
-friendlyButtonNames['default'] = friendlyButtonNames['Xbox 360 Controller'];
 
 friendlyButtonNames['Sony Dualshock 3 Controller'] = {
   ax0: 'LS Vertical',
