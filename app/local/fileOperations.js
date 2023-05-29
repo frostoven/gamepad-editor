@@ -3,8 +3,8 @@ import path from 'path';
 import userProfile from '../userProfile'
 import {generateDefaultButtonNames} from './gamepadUtils'
 
-const profileDir = path.join(userProfile.getUserDataDir(), 'Frostoven/GamepadEditor');
-const buttonNamesFilePath = path.join(profileDir, 'button_names.json');
+const profileDir = path.join(userProfile.getUserDataDir(), 'CosmosisGame/controllerNameMods/');
+const customButtonNamesFilePath = path.join(profileDir, 'custom_button_names.json');
 
 const checkAndCreateDir = async () => {
   try {
