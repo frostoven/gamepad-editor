@@ -1,36 +1,30 @@
-import {defaultGamepadButtons} from './default_buttons.js';
+import { friendlyButtonNames, guessGamepadName } from '../GamepadManager/types/gamepadNames';
 
 // This function generates default button names based on the provided gamepad.
 const generateDefaultButtonNames = (gamepad) => {
-  const defaultButtonNames = {};
+  let defaultButtonNames = {};
 
-  // Check if gamepad and buttons exist before trying to generate names.
-  if (gamepad && gamepad.buttons) {
-    for (let i = 0; i < gamepad.buttons.length; i++) {
-      defaultButtonNames[`bt${i}`] = `Button ${i}`;  // Default naming convention for buttons.
+  if (gamepad) {
+    // Transform the raw gamepad ID to a friendly name
+    const gamepadName = guessGamepadName(gamepad.id);
+
+    // Fetch the specific controller button names if it exists, otherwise fetch the default
+    const controllerFriendlyNames = friendlyButtonNames[gamepadName] || friendlyButtonNames['default'];
+
+    // Now add any remaining default names for buttons and axes that weren't covered by the friendly names
+    if (gamepad.buttons) {
+      for (let i = 0; i < gamepad.buttons.length; i++) {
+        defaultButtonNames[`bt${i}`] = controllerFriendlyNames[`bt${i}`] || `Button ${i}`;
+      }
     }
-  }
 
-  // Check if gamepad and axes exist before trying to generate names.
-  if (gamepad && gamepad.axes) {
-    for (let i = 0; i < gamepad.axes.length; i++) {
-      defaultButtonNames[`ax${i}`] = `Axis ${i}`;  // Default naming convention for axes.
-    }
-  }
-
-  // If gamepad is not null and has an id, try to match the gamepad id with pre-defined ids.
-  if (gamepad && gamepad.id) {
-    const keywords = gamepad.id.split(" ");
-    for (let gp of defaultGamepadButtons) {
-      // If any keyword in the gamepad id matches any keyword for a pre-defined gamepad,
-      // merge the pre-defined button names with the default ones, giving preference to the pre-defined names.
-      if (keywords.some(keyword => gp.keywords.includes(keyword))) {
-        return {...defaultButtonNames, ...gp.buttons};
+    if (gamepad.axes) {
+      for (let i = 0; i < gamepad.axes.length; i++) {
+        defaultButtonNames[`ax${i}`] = controllerFriendlyNames[`ax${i}`] || `Axis ${i}`;
       }
     }
   }
 
-  // If no matching id is found, return the default button names.
   return defaultButtonNames;
 };
 
