@@ -15,27 +15,61 @@ const checkAndCreateDir = async () => {
 };
 
 const readButtonNamesFromFile = async (gamepad) => {
-    const defaultButtonNames = generateDefaultButtonNames(gamepad);
-    try {
-      const data = await fs.promises.readFile(buttonNamesFilePath, 'utf-8');
-      const storedButtonNames = JSON.parse(data);
-      return {...defaultButtonNames, ...storedButtonNames};
-    } catch (err) {
-      if (err.code === 'ENOENT') {
-        console.log('File not found, returning default button names');
-        return defaultButtonNames;
-      } else {
-        console.error('Error reading button names file:', err);
-      }
+  const defaultButtonNames = generateDefaultButtonNames(gamepad);
+  try {
+    const data = await fs.promises.readFile(customButtonNamesFilePath, 'utf-8');
+    const storedButtonNames = JSON.parse(data);
+    const idButtonNames = storedButtonNames[gamepad.id] || {};
+    return {...defaultButtonNames, ...idButtonNames};
+  } catch (err) {
+    if (err.code === 'ENOENT') {
+      console.log('File not found, returning default button names');
+      return defaultButtonNames;
+    } else {
+      console.error('Error reading button names file:', err);
+      return defaultButtonNames;  // returning defaultButtonNames even if there is an error
     }
+  }
 };
 
-const saveButtonNamesToFile = async (buttonNames) => {
+const saveButtonNamesToFile = async (buttonNames, gamepadId) => {
+  // Ensure the directory exists
+  await checkAndCreateDir();
+
   try {
-    const data = JSON.stringify(buttonNames, null, 2);
-    await fs.promises.writeFile(buttonNamesFilePath, data, 'utf-8');
-  } catch (err) {
-    console.error('Error writing button names file:', err);
+    // Try to read the file
+    const data = JSON.parse(await fs.promises.readFile(customButtonNamesFilePath, 'utf8'));
+    // Merge the new button names
+    data[gamepadId] = buttonNames;
+    // Write the data back to the file
+    await fs.promises.writeFile(customButtonNamesFilePath, JSON.stringify(data, null, 2), 'utf8');
+  } catch (error) {
+    if (error.code === 'ENOENT') {
+      // If the file doesn't exist, create it
+      const data = {};
+      data[gamepadId] = buttonNames;
+      await fs.promises.writeFile(customButtonNamesFilePath, JSON.stringify(data, null, 2), 'utf8');
+    } else {
+      // If there's another kind of error, re-throw it
+      throw error;
+    }
+  }
+};
+
+const getButtonNamesFromFile = async (gamepadId) => {
+  try {
+    // Try to read the file
+    const data = JSON.parse(await fs.promises.readFile(customButtonNamesFilePath, 'utf-8'));
+    // Return the button names for the given gamepad ID, or null if they're not in the file
+    return data[gamepadId] || null;
+  } catch (error) {
+    if (error.code === 'ENOENT') {
+      // If the file doesn't exist, return null
+      return null;
+    } else {
+      // If there's another kind of error, re-throw it
+      throw error;
+    }
   }
 };
 
@@ -43,4 +77,5 @@ export {
   saveButtonNamesToFile,
   readButtonNamesFromFile,
   checkAndCreateDir,
+  getButtonNamesFromFile,
 }
