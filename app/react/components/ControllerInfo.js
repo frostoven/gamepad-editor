@@ -2,7 +2,7 @@ import React, {useState, useEffect, useRef} from 'react';
 import {Segment, Grid, List, Checkbox} from 'semantic-ui-react';
 import AxisInfo from "./AxisInfo";
 import ButtonInfo from "./ButtonInfo";
-import {readButtonNamesFromFile, saveButtonNamesToFile} from '../../local/fileOperations'
+import {readButtonNamesFromFile, saveButtonNamesToFile, getButtonNamesFromFile} from '../../local/fileOperations'
 import {generateDefaultButtonNames} from '../../local/gamepadUtils'
 
 
@@ -23,6 +23,24 @@ const ControllerInfo = ({ gamepad }) => {
         setButtonNames(storedButtonNames);
       });
     }
+  }, [gamepad]);
+
+  useEffect(() => {
+    // When the gamepad.id prop changes, update buttonNames
+    const updateButtonNames = async () => {
+      if (gamepad) {
+        const storedButtonNames = await getButtonNamesFromFile(gamepad.id);
+        if (storedButtonNames !== null) {
+          // If there are button names stored in the file for this controller, use those
+          setButtonNames(storedButtonNames);
+        } else {
+          // If there are no button names stored in the file for this controller, use default names
+          const defaultButtonNames = generateDefaultButtonNames(gamepad);
+          setButtonNames(defaultButtonNames);
+        }
+      }
+    };
+    updateButtonNames().catch((error) => console.error(error));
   }, [gamepad]);
 
   const processGamepadData = () => {
@@ -69,7 +87,7 @@ const ControllerInfo = ({ gamepad }) => {
     const key = isAxis ? `ax${index}` : `bt${index}`;
     const newButtonNames = {...buttonNames};
     newButtonNames[key] = newName;
-    await saveButtonNamesToFile(newButtonNames);
+    await saveButtonNamesToFile(newButtonNames, gamepad.id); // replace `props.gamepad.id` with `gamepad.id`
     setButtonNames(newButtonNames);
   };
 
