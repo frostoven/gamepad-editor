@@ -35,6 +35,48 @@ const friendlyButtonNames = {};
 //  buttons in a rounded green box, Sony in blue (or dark grey?), and all other
 //  brands in orange.
 
+friendlyButtonNames['Generic'] = {
+  ax0: 'Axis 0',
+  ax1: 'Axis 1',
+  ax2: 'Axis 2',
+  ax3: 'Axis 3',
+  ax4: 'Axis 4',
+  //
+  bt0: 'Button 0',
+  bt1: 'Button 1',
+  bt2: 'Button 2',
+  bt3: 'Button 3',
+  bt4: 'Button 4',
+  bt5: 'Button 5',
+  bt6: 'Button 6',
+  bt7: 'Button 7',
+  bt8: 'Button 8',
+  bt9: 'Button 9',
+  bt10: 'Button 10',
+  bt11: 'Button 11',
+  bt12: 'Button 12',
+  bt13: 'Button 13',
+  bt14: 'Button 14',
+  bt15: 'Button 15',
+  bt16: 'Button 16',
+  bt17: 'Button 17',
+  bt18: 'Button 18',
+  bt19: 'Button 19',
+  bt20: 'Button 20',
+  bt21: 'Button 21',
+  bt22: 'Button 22',
+  bt23: 'Button 23',
+  bt24: 'Button 24',
+  bt25: 'Button 25',
+  bt26: 'Button 26',
+  bt27: 'Button 27',
+  bt28: 'Button 28',
+  bt29: 'Button 29',
+  bt30: 'Button 30',
+  bt31: 'Button 31'
+}
+friendlyButtonNames['default'] = friendlyButtonNames['Generic'];
+
 friendlyButtonNames['Xbox 360 Controller'] = {
   ax0: 'LS Vertical',
   ax1: 'LS Horizontal',
