@@ -87,7 +87,7 @@ const ControllerInfo = ({ gamepad }) => {
     const key = isAxis ? `ax${index}` : `bt${index}`;
     const newButtonNames = {...buttonNames};
     newButtonNames[key] = newName;
-    await saveButtonNamesToFile(newButtonNames, gamepad.id); // replace `props.gamepad.id` with `gamepad.id`
+    await saveButtonNamesToFile(newButtonNames, gamepad.id);
     setButtonNames(newButtonNames);
   };
 
