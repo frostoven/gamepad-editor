@@ -35,6 +35,48 @@ const friendlyButtonNames = {};
 //  buttons in a rounded green box, Sony in blue (or dark grey?), and all other
 //  brands in orange.
 
+friendlyButtonNames['Generic'] = {
+  ax0: 'Axis 0',
+  ax1: 'Axis 1',
+  ax2: 'Axis 2',
+  ax3: 'Axis 3',
+  ax4: 'Axis 4',
+  //
+  bt0: 'Button 0',
+  bt1: 'Button 1',
+  bt2: 'Button 2',
+  bt3: 'Button 3',
+  bt4: 'Button 4',
+  bt5: 'Button 5',
+  bt6: 'Button 6',
+  bt7: 'Button 7',
+  bt8: 'Button 8',
+  bt9: 'Button 9',
+  bt10: 'Button 10',
+  bt11: 'Button 11',
+  bt12: 'Button 12',
+  bt13: 'Button 13',
+  bt14: 'Button 14',
+  bt15: 'Button 15',
+  bt16: 'Button 16',
+  bt17: 'Button 17',
+  bt18: 'Button 18',
+  bt19: 'Button 19',
+  bt20: 'Button 20',
+  bt21: 'Button 21',
+  bt22: 'Button 22',
+  bt23: 'Button 23',
+  bt24: 'Button 24',
+  bt25: 'Button 25',
+  bt26: 'Button 26',
+  bt27: 'Button 27',
+  bt28: 'Button 28',
+  bt29: 'Button 29',
+  bt30: 'Button 30',
+  bt31: 'Button 31'
+}
+friendlyButtonNames['default'] = friendlyButtonNames['Generic'];
+
 friendlyButtonNames['Xbox 360 Controller'] = {
   ax0: 'LS Vertical',
   ax1: 'LS Horizontal',
@@ -57,11 +99,10 @@ friendlyButtonNames['Xbox 360 Controller'] = {
   bt13: 'D-Pad Down',
   bt14: 'D-Pad Left',
   bt15: 'D-Pad Right',
-  bt16: 'Xbox Bt 16',
+  bt16: 'Xbox Button',
   bt17: 'Xbox Bt 17',
   bt18: 'Xbox Bt 18',
 };
-friendlyButtonNames['default'] = friendlyButtonNames['Xbox 360 Controller'];
 
 friendlyButtonNames['Sony Dualshock 3 Controller'] = {
   ax0: 'LS Vertical',
@@ -107,81 +148,81 @@ ds5.bt18 = 'DS5 Bt 18';
 
 // Dev note: the manual counts from 1 instead of 0.
 friendlyButtonNames['HOTAS Warthog Throttle'] = {
-  ha0: 'Slew Control Axis [0]',
-  ha1: 'Slew Control Axis [1]',
-  ha2: 'Throttle [Right Half]',
-  ha5: 'Throttle [Left Half]',
-  ha6: 'Throttle [Friction control]',
-  ha9: 'Coolie Switch',
+  ax0: 'Slew Control Axis [0]',
+  ax1: 'Slew Control Axis [1]',
+  ax2: 'Throttle [Right Half]',
+  ax5: 'Throttle [Left Half]',
+  ax6: 'Throttle [Friction control]',
+  ax9: 'Coolie Switch',
   //
-  hb0: 'Slew Button',
+  bt0: 'Slew Button',
   //
-  hb1: 'MIC Switch [Push]',
-  hb2: 'MIC Switch [Up]',
-  hb3: 'MIC Switch [Far]',
-  hb4: 'MIC Switch [Down]',
-  hb5: 'MIC Switch [Near]',
+  bt1: 'MIC Switch [Push]',
+  bt2: 'MIC Switch [Up]',
+  bt3: 'MIC Switch [Far]',
+  bt4: 'MIC Switch [Down]',
+  bt5: 'MIC Switch [Near]',
   //
-  hb6: 'Speedbrake [Far]',
-  hb7: 'Speedbrake [Near]',
-  hb8: 'Boat Switch [Far]',
-  hb9: 'Boat Switch [Near]',
-  hb10: 'China Hat [Far]',
-  hb11: 'China Hat [Near]',
+  bt6: 'Speedbrake [Far]',
+  bt7: 'Speedbrake [Near]',
+  bt8: 'Boat Switch [Far]',
+  bt9: 'Boat Switch [Near]',
+  bt10: 'China Hat [Far]',
+  bt11: 'China Hat [Near]',
   //
-  hb12: 'Pinky Switch [Far]',
-  hb13: 'Pinky Switch [Near]',
-  hb14: 'Red Throttle Button',
+  bt12: 'Pinky Switch [Far]',
+  bt13: 'Pinky Switch [Near]',
+  bt14: 'Red Throttle Button',
   //
-  hb15: 'Fuel Flow [Left]',
-  hb16: 'Fuel Flow [Right]',
-  hb17: 'Engine [Left]',
-  hb18: 'Engine [Right]',
-  hb19: 'APU Start',
-  hb20: 'Landing Gear | WRN',
+  bt15: 'Fuel Flow [Left]',
+  bt16: 'Fuel Flow [Right]',
+  bt17: 'Engine [Left]',
+  bt18: 'Engine [Right]',
+  bt19: 'APU Start',
+  bt20: 'Landing Gear | WRN',
   //
-  hb21: 'Flaps [Up]',
-  hb22: 'Flaps [Down]',
+  bt21: 'Flaps [Up]',
+  bt22: 'Flaps [Down]',
   //
-  hb23: 'EAC Arm',
-  hb24: 'RDR ALTM',
-  hb25: 'Autopilot [On/Off]',
-  hb26: 'Path [Autopilot]',
-  hb27: 'Alt [Autopilot]',
-  hb28: 'Park [Right]',
-  hb29: 'Park [Left]',
-  hb30: 'Ignition [Left]',
-  hb31: 'Ignition [Right]',
+  bt23: 'EAC Arm',
+  bt24: 'RDR ALTM',
+  bt25: 'Autopilot [On/Off]',
+  bt26: 'Path [Autopilot]',
+  bt27: 'Alt [Autopilot]',
+  bt28: 'Park [Right]',
+  bt29: 'Park [Left]',
+  bt30: 'Ignition [Left]',
+  bt31: 'Ignition [Right]',
 };
 
 // Dev note: the manual counts from 1 instead of 0.
 friendlyButtonNames['HOTAS Warthog Flight Stick'] = {
-  fa0: 'Stick [Roll]',
-  fa1: 'Stick [Pitch]',
-  fa9: 'Trim Switch',
+  ax0: 'Stick [Roll]',
+  ax1: 'Stick [Pitch]',
+  ax9: 'Trim Switch',
   //
-  fb0: 'Gun Trigger (Stage 1)',
-  fb1: 'Weapons Release',
-  fb2: 'Nosewheel Button',
-  fb3: 'Paddle Switch',
-  fb4: 'Master Mode Control',
-  fb5: 'Gun Trigger (Fire)',
+  bt0: 'Gun Trigger (Stage 1)',
+  bt1: 'Weapons Release',
+  bt2: 'Nosewheel Button',
+  bt3: 'Paddle Switch',
+  bt4: 'Master Mode Control',
+  bt5: 'Gun Trigger (Fire)',
   //
-  fb6: 'Target [Up]',
-  fb7: 'Target [Right]',
-  fb8: 'Target [Down]',
-  fb9: 'Target [Left]',
+  bt6: 'Target [Up]',
+  bt7: 'Target [Right]',
+  bt8: 'Target [Down]',
+  bt9: 'Target [Left]',
   //
-  fb10: 'Data Management [Up]',
-  fb11: 'Data Management [Right]',
-  fb12: 'Data Management [Down]',
-  fb13: 'Data Management [Left]',
+  bt10: 'Data Management [Up]',
+  bt11: 'Data Management [Right]',
+  bt12: 'Data Management [Down]',
+  bt13: 'Data Management [Left]',
   //
-  fb14: 'Countermeasures [Far]',
-  fb15: 'Countermeasures [Right]',
-  fb16: 'Countermeasures [Near]',
-  fb17: 'Countermeasures [Left]',
-  fb18: 'Countermeasures [Push]',
+  bt14: 'Countermeasures [Far]',
+  bt15: 'Countermeasures [Right]',
+  bt16: 'Countermeasures [Near]',
+  bt17: 'Countermeasures [Left]',
+  bt18: 'Countermeasures [Push]',
 };
 
 // ----------------------------------------------------------------------------
@@ -189,4 +230,5 @@ friendlyButtonNames['HOTAS Warthog Flight Stick'] = {
 export {
   knownGamepadNames,
   guessGamepadName,
+  friendlyButtonNames
 };
